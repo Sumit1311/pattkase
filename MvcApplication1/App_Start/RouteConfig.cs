@@ -18,11 +18,11 @@ namespace MvcApplication1
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-            routes.MapRoute(
+            /*routes.MapRoute(
                 "Login",
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Login", id = UrlParameter.Optional } // Parameter defaults
-            );
+            );*/
 
             routes.MapRoute(
                 "Dashboard",

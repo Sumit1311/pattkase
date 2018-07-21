@@ -24,6 +24,8 @@ namespace MvcApplication1
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            ViewEngines.Engines.Clear();
+            ViewEngines.Engines.Add(new WebFormViewEngine());
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

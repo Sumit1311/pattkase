@@ -13,10 +13,12 @@ namespace MvcApplication1.Controllers
     {
         //
         // GET: /Home/
-        OracleDbContext ctx = new OracleDbContext();
+        //OracleDbContext ctx ew OracleDbContext();
+        ApplicationDbContext user = new ApplicationDbContext();
+
 
         public HomeController() {
-            ctx.InitializeModel();
+            //ctx.InitializeModel();
         }
 
         public ActionResult Index()
@@ -27,9 +29,20 @@ namespace MvcApplication1.Controllers
 
         public ActionResult Dashboard()
         {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            ViewBag.Email = claimsIdentity.FindFirst(ClaimTypes.Email).Value;
+            
+            ClaimsIdentity identity = User.Identity as ClaimsIdentity;
+            //ViewBag.Email = claimsIdentity.FindFirst(ClaimTypes.Email).Value;
+            //ViewBag.Role = identity.HasClaim(ClaimTypes.Role,"Admin");
             return View("Dashboard");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public ActionResult Requesters()
+        {
+            var requesters = user.Requesters.ToList();
+            ViewBag.requesters = requesters;
+            return View("Requesters");        
         }
     }
 }

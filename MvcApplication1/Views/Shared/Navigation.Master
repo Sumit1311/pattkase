@@ -1,32 +1,41 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" Inherits="System.Web.Mvc.ViewMasterPage" %>
-
+<%@ Import Namespace=" MvcApplication1.Controllers" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Pattkase</title>
     <link href="/Content/bootstrap.css" rel="Stylesheet"></link>
-    
     <asp:ContentPlaceHolder ID="StyleSection" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
     <!-- <form id="form1" runat="server"> -->
     <div class="container" runat="server">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">PattKase</a>
+  <a class="navbar-brand" href="/Home/Index">PattKase</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav" >
-      <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+      <!-- <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a> -->
+        <% if(Request.IsAuthenticated) {%>
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Profile
         </a>
+            
+        
+        
+        
+            
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <% if(HttpContext.Current.User.IsInRole("Admin")){ %>
+              <a class="dropdown-item" href="/Home/Requesters">Requesters</a>
+            <%} %>
           <a class="dropdown-item" href="/Auth/Logout">Log Out</a>
         </div>
       </li>
+        <%} %>
     </div>
       
   </div>
