@@ -51,7 +51,24 @@
             <div class="card-header">Login and Password</div>
             <div class="card-body">
                 
-<form method="POST" action="/Auth/Approve"> 
+<form method="POST" action="/Auth/Approve">
+    <div class="form-row">
+        <div class="form-group col-md-2">
+            <label for="">Grant Access : </label>
+            </div>
+       <div class="form-group col-md-6">
+    <div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+  <label class="form-check-label" for="inlineRadio1">Yes</label>
+</div>
+    
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+  <label class="form-check-label" for="inlineRadio2">No</label>
+</div> 
+               </div>
+        </div>
+    
   <div class="form-row">
       <input type="hidden" name="reqId" value="<%= r.Id %>" />
     <div class="form-group col-md-6">

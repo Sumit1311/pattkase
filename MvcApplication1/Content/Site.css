@@ -40,3 +40,37 @@ input[type="checkbox"].input-validation-error {
 .validation-summary-valid {
     display: none;
 }
+
+#rcornersform {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 20px;
+    width: 80%;
+    
+}
+.logo_main
+{
+    font-family:'wendyone',serif;
+    font-size: 45px;
+    font-style:italic;
+   
+}
+
+.form_body
+{
+    background:url("backgnd.jpg");
+    padding:50px 50px 50px 50px;
+    border: 2px #0000;
+    border-radius:10px;
+    height:100%;
+    width:100%;
+    
+
+}
+
+.logo_tagline
+{
+    font-family:Times New Roman,serif;
+    font-size:20px;
+    font-style:italic;    
+}

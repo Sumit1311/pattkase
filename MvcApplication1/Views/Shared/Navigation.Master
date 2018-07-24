@@ -5,17 +5,44 @@
 <head runat="server">
     <title>Pattkase</title>
     <link href="/Content/bootstrap.css" rel="Stylesheet"></link>
+    <style>
+        .logo_main
+{
+    font-family:'wendyone',serif;
+    font-size: 45px;
+    font-style:italic;
+   
+}
+        .navbar-back
+        {
+            background:url("/Content/backgnd.jpg");
+        }
+        .form_body
+{
+    /*background:url("/Content/backgnd.jpg");*/
+    padding:20px 50px 50px 50px;
+    border: 2px #0000;
+    border-radius:10px;
+    margin-top:20px;
+    height:100%;
+    width:100%;
+    
+
+}
+
+        </style>
+    <!-- <link href="/Content/site.css" rel="Stylesheet"></link>-->
     <asp:ContentPlaceHolder ID="StyleSection" runat="server"></asp:ContentPlaceHolder>
 </head>
 <body>
     <!-- <form id="form1" runat="server"> -->
     <div class="container" runat="server">
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/Home/Index">PattKase</a>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-back " >
+  <a class="navbar-brand" href="/Home/Index"><h1 class="logo_main">PattKase</h1></a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
     <div class="navbar-nav" >
       <!-- <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a> -->
         <% if(Request.IsAuthenticated) {%>
@@ -40,12 +67,23 @@
       
   </div>
 </nav>
+        <div class="form_body border">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
+            </div>
       
     </div>
+    <script>
+var Q;
+            </script>
     <script src="/Scripts/jquery-3.0.0.min.js"></script>
     <script src="/Scripts/bootstrap.min.js"></script>
+     <script src="/Scripts/q-1.1.0.js"></script>
+    <script src="/Scripts/util.js"></script>
+    <script src="/Scripts/helpers/navLogInHelper.js"></script>
+    <script src="/js/helpers/navRegistrationHelper.js"></script>
+
+
     <asp:ContentPlaceHolder ID="ScriptSection" runat="server"></asp:ContentPlaceHolder>
     <!-- </form> -->
 </body>

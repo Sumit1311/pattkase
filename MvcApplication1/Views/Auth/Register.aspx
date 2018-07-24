@@ -2,19 +2,23 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <%@import Namespace="MvcApplication1.Models" %>
+    
 <form action="/Auth/Register" method="POST">
+    <p ><h3 class="text-center">Sign up</h3></p>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
-    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    <small id="emailHelp" class="form-text text-muted">Max. 50 characters</small>
   </div>
   <div class="form-group">
     <label for="fullNameId">Full Name</label>
     <input name="fullname" type="text" class="form-control" id="fullNameId" placeholder="Full Name">
+      <small id="emailHelp" class="form-text text-muted">Max. 50 characters</small>
   </div>
     <div class="form-group">
     <label for="nameOfOrganizationId">Name Of Organisation</label>
     <input name="organization" type="text" class="form-control" id="nameOfOrganizationId" placeholder="Name of Organization">
+        <small id="emailHelp" class="form-text text-muted">Max. 100 characters</small>
   </div>
     <div class="form-group">
     <label for="professionId">Profession</label>
@@ -26,14 +30,16 @@
       <option value="<%= i+1 %>"><%= p[i] %></option>
         <%} %>
     </select>
+
   </div>
     <div class="form-group">
     <label for="addressId">Purpose</label>
-    <textarea class="form-control" id="addressId" name="address" rows="3"></textarea>
+    <textarea class="form-control" id="addressId" name="address" rows="3" placeholder="Max. 250 characters"></textarea>
   </div>
     <div class="form-group">
     <label for="purposeId">Address</label>
-    <textarea class="form-control" id="purposeId" name="purpose" rows="3"></textarea>
+    <textarea class="form-control" id="purposeId" name="purpose" rows="3" placeholder="Max. 100 characters"></textarea>
+        
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
   <!-- <button type="submit" class="btn btn-primary">Cancel</button> -->

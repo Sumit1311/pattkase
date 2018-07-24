@@ -198,6 +198,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Library\ResponseUtils.cs" />
     <Compile Include="Models\OracleDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -206,12 +207,19 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\backgnd.jpg" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\helpers\navLogInHelper.js" />
+    <Content Include="Scripts\helpers\navRegistrationHelper.js" />
+    <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\q-1.1.0.js" />
+    <Content Include="Scripts\util.js" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.bundle.js" />
@@ -236,6 +244,7 @@
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\wendyone.ttf" />
     <None Include="Scripts\jquery-3.0.0-vsdoc.js" />
     <Content Include="Scripts\jquery-3.0.0.js" />
     <Content Include="Scripts\jquery-3.0.0.min.js" />
@@ -257,9 +266,11 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
+    <Content Include="Views\Auth\Login - Copy.aspx" />
     <Content Include="Views\Auth\ViewRequester.aspx" />
     <Content Include="Views\Auth\Register.aspx" />
     <Content Include="Views\Auth\Login.aspx" />
+    <Content Include="Views\Error-500.aspx" />
     <Content Include="Views\Home\Requesters.aspx" />
     <Content Include="Views\Home\Dashboard.aspx" />
     <Content Include="Views\Home\Index.aspx" />

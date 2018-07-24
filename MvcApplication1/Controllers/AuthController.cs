@@ -93,8 +93,18 @@ namespace MvcApplication1.Controllers
             var ctx = Request.GetOwinContext();
             var authManager = ctx.Authentication;
 
-            authManager.SignOut("ApplicationCookie");
-            return RedirectToAction("index", "home");
+            try
+            {
+                authManager.SignOut("ApplicationCookie");
+                return RedirectToAction("index", "home");
+            }
+            catch (Exception e)
+            {
+                ViewBag.message = e.Message.ToString();
+                return View("Error-500");
+            }
+            
+
         }
 
         [AllowAnonymous]
@@ -118,16 +128,23 @@ namespace MvcApplication1.Controllers
             req.Profession = Convert.ToInt32(fc["profession"]);
             req.Purpose = fc["purpose"].ToString();
             req.Status = 0;
-
-            user.Requesters.Add(req);
-            if (user.SaveChanges() > 0)
+            try
             {
-                return RedirectToAction("index", "home");
+                user.Requesters.Add(req);
+                if (user.SaveChanges() > 0)
+                {
+                    return RedirectToAction("index", "home");
+                }
+                else
+                {
+                    //ViewBag.msg = "Failed to Save Data";
+                    return RedirectToAction("Register", "Auth");
+                }
             }
-            else
+            catch (Exception e)
             {
-                //ViewBag.msg = "Failed to Save Data";
-                return RedirectToAction("Register", "Auth");
+                ViewBag.message = e.Message.ToString();
+                return View("Error-500");
             }
         }
 
@@ -136,21 +153,30 @@ namespace MvcApplication1.Controllers
         public ActionResult ViewRequester()
         {
             var RequesterId = Request.QueryString["id"];
-            Login login = user.Users.FirstOrDefault(r => r.RequesterRefId == RequesterId);
-            Requester req = user.Requesters.FirstOrDefault(r => r.Id == RequesterId);
-            ViewBag.requester = req;
-            if (login == null)
-            {
-                ViewBag.userName = req.EmailId;
-                ViewBag.password = "Default123";
+            try 
+            { 
+                Login login = user.Users.FirstOrDefault(r => r.RequesterRefId == RequesterId);
+                Requester req = user.Requesters.FirstOrDefault(r => r.Id == RequesterId);
+                ViewBag.requester = req;
+                if (login == null)
+                {
+                    ViewBag.userName = req.EmailId;
+                    ViewBag.password = "Default123";
+                }
+                else
+                {
+                    ViewBag.userName = login.UserName;
+                }
+
+                ViewBag.isApproved = req.Status == 0 ? false : true;
+                return View("ViewRequester");
             }
-            else 
+            catch (Exception e)
             {
-                ViewBag.userName = login.UserName;
+                ViewBag.message = e.Message.ToString();
+                return View("Error-500");
             }
             
-            ViewBag.isApproved = req.Status == 0 ? false : true;
-            return View("ViewRequester");
         }
 
         [HttpPost]
@@ -161,6 +187,8 @@ namespace MvcApplication1.Controllers
             var userName = fc["userName"];
             var password = fc["pwd"];
             var userLogin = new Login();
+            try 
+            {
             Requester req = user.Requesters.FirstOrDefault(r => r.Id == requesterId);
             if (req.Status == 0)
             {
@@ -190,12 +218,30 @@ namespace MvcApplication1.Controllers
 
                 //Response.Redirect("/Auth/ViewRequester?id=" + requesterId);
             }
+            else
+            {
+                //TODO : Handle this case when the user is already active
+            }
             return RedirectToAction("Requesters","Home");
+                 }
+            catch (Exception e)
+            {
+                ViewBag.message = e.Message.ToString();
+                return View("Error-500");
+            }
         }
 
         public bool isAdmin(Login user)
         {
-            return userManager.IsInRole(user.Id, "Admin");
+            try
+            {
+                return userManager.IsInRole(user.Id, "Admin");
+            }
+            catch (Exception e)
+            {
+                //ViewBag.message = e.Message.ToString();
+                return false;
+            }
         }
 
 
