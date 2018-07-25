@@ -13,12 +13,69 @@ using System.Security.Policy;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
+using MvcApplication1.Library;
 
 
 namespace MvcApplication1.Controllers
 {
+    public class BaseController : Controller
+    {
+        public ActionResult GenericRedirect(string url)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                var json = new JsonResult();
 
-    public class AuthController : Controller
+                json.Data = new
+                {
+                    code = "OK",
+                    status = "200",
+                    body = new
+                    {
+                        redirect = url
+                    }
+                };
+                return json;
+
+            }
+            else
+            {
+                return Redirect(url);
+            }
+
+
+        }
+
+        public ActionResult SendErrorResponse(string message, string subMessage)
+        {
+            
+            if (Request.IsAjaxRequest())
+            {
+                var json = new JsonResult();
+
+                json.Data = new
+                {
+                    code = "Error",
+                    status = ""+Response.StatusCode,
+                    body = new
+                    {
+                        message = message,
+                        subMessage = subMessage
+                    }
+                };
+                return json;
+            }
+            else
+            {
+                
+                ViewBag.message = message;
+                ViewBag.subMessage = subMessage;
+                return View("Error-"+Response.StatusCode);
+            }
+        }
+    }
+
+    public class AuthController : BaseController
     {
         //OracleDbContext ctx = new OracleDbContext();
         ApplicationDbContext user = new ApplicationDbContext();
@@ -71,9 +128,9 @@ namespace MvcApplication1.Controllers
                     }
                     authManager.SignIn(identity);
                     if (ReturnUrl != null && ReturnUrl != String.Empty){
-                        return Redirect(ReturnUrl);
+                        return GenericRedirect(ReturnUrl);
                     }
-                    return Redirect(Url.Action("Dashboard", "Home"));
+                    return GenericRedirect(Url.Action("Dashboard", "Home"));
                 }
 
             }
@@ -81,9 +138,9 @@ namespace MvcApplication1.Controllers
             {
                 System.Diagnostics.Debug.WriteLine("User Does Not Exist");
                 System.Diagnostics.Debug.WriteLine(e);
-                return Redirect(Url.Action("Index", "Home"));
+                return GenericRedirect(Url.Action("Index", "Home"));
             }
-            return Redirect(Url.Action("Index", "Home"));
+            return GenericRedirect(Url.Action("Index", "Home"));
         }
 
 
@@ -96,12 +153,12 @@ namespace MvcApplication1.Controllers
             try
             {
                 authManager.SignOut("ApplicationCookie");
-                return RedirectToAction("index", "home");
+                return GenericRedirect(Url.Action("Index", "Home"));
             }
             catch (Exception e)
             {
-                ViewBag.message = e.Message.ToString();
-                return View("Error-500");
+                Response.StatusCode=500;
+                return SendErrorResponse("Internal Server Error", e.Message.ToString());
             }
             
 
@@ -133,18 +190,18 @@ namespace MvcApplication1.Controllers
                 user.Requesters.Add(req);
                 if (user.SaveChanges() > 0)
                 {
-                    return RedirectToAction("index", "home");
+                    return GenericRedirect(Url.Action("Index", "Home"));
                 }
                 else
                 {
                     //ViewBag.msg = "Failed to Save Data";
-                    return RedirectToAction("Register", "Auth");
+                    return GenericRedirect(Url.Action("Register", "Auth"));
                 }
             }
             catch (Exception e)
             {
-                ViewBag.message = e.Message.ToString();
-                return View("Error-500");
+                Response.StatusCode = 500;
+                return SendErrorResponse(e);
             }
         }
 
@@ -173,8 +230,8 @@ namespace MvcApplication1.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.message = e.Message.ToString();
-                return View("Error-500");
+                Response.StatusCode = 500;
+                return SendErrorResponse(e);
             }
             
         }
@@ -222,12 +279,12 @@ namespace MvcApplication1.Controllers
             {
                 //TODO : Handle this case when the user is already active
             }
-            return RedirectToAction("Requesters","Home");
+            return GenericRedirect(Url.Action("Requesters","Home"));
                  }
             catch (Exception e)
             {
-                ViewBag.message = e.Message.ToString();
-                return View("Error-500");
+                Response.StatusCode=500;
+                return SendErrorResponse(e);
             }
         }
 
