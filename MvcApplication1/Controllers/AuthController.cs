@@ -13,29 +13,21 @@ using System.Security.Policy;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
-using MvcApplication1.Library;
 
 
 namespace MvcApplication1.Controllers
 {
     public class BaseController : Controller
     {
-        public ActionResult GenericRedirect(string url)
+        public ActionResult SendRedirectResponse(string url)
         {
             if (Request.IsAjaxRequest())
             {
-                var json = new JsonResult();
-
-                json.Data = new
+                Response.StatusCode = 200;
+                return SendAjaxResponse("OK", new 
                 {
-                    code = "OK",
-                    status = "200",
-                    body = new
-                    {
-                        redirect = url
-                    }
-                };
-                return json;
+                    redirect = url
+                });
 
             }
             else
@@ -46,31 +38,44 @@ namespace MvcApplication1.Controllers
 
         }
 
-        public ActionResult SendErrorResponse(string message, string subMessage)
+        public ActionResult SendAjaxResponse(string code, Object response)
         {
-            
-            if (Request.IsAjaxRequest())
+            if(Request.IsAjaxRequest())
             {
                 var json = new JsonResult();
 
                 json.Data = new
                 {
-                    code = "Error",
-                    status = ""+Response.StatusCode,
-                    body = new
-                    {
-                        message = message,
-                        subMessage = subMessage
-                    }
+                    code = code,
+                    status =  "" +(Response.StatusCode == 0 ? 200 : Response.StatusCode),
+                    body = response
                 };
                 return json;
+
+            } else
+            {
+                throw new Exception();
+            }
+        }
+
+        public ActionResult SendErrorResponse(string message, string subMessage)
+        {
+            
+            if (Request.IsAjaxRequest())
+            {
+
+                return SendAjaxResponse("Error", new
+                {
+                    message = message,
+                    subMessage = subMessage
+                });
             }
             else
             {
                 
                 ViewBag.message = message;
                 ViewBag.subMessage = subMessage;
-                return View("Error-"+Response.StatusCode);
+                return View("~/Views/Error-"+Response.StatusCode+".aspx");
             }
         }
     }
@@ -128,9 +133,14 @@ namespace MvcApplication1.Controllers
                     }
                     authManager.SignIn(identity);
                     if (ReturnUrl != null && ReturnUrl != String.Empty){
-                        return GenericRedirect(ReturnUrl);
+                        return SendRedirectResponse(ReturnUrl);
                     }
-                    return GenericRedirect(Url.Action("Dashboard", "Home"));
+                    return SendRedirectResponse(Url.Action("Dashboard", "Home"));
+                } 
+                else
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "User does not exist");
                 }
 
             }
@@ -138,9 +148,9 @@ namespace MvcApplication1.Controllers
             {
                 System.Diagnostics.Debug.WriteLine("User Does Not Exist");
                 System.Diagnostics.Debug.WriteLine(e);
-                return GenericRedirect(Url.Action("Index", "Home"));
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
-            return GenericRedirect(Url.Action("Index", "Home"));
         }
 
 
@@ -153,12 +163,12 @@ namespace MvcApplication1.Controllers
             try
             {
                 authManager.SignOut("ApplicationCookie");
-                return GenericRedirect(Url.Action("Index", "Home"));
+                return SendRedirectResponse(Url.Action("Index", "Home"));
             }
             catch (Exception e)
             {
                 Response.StatusCode=500;
-                return SendErrorResponse("Internal Server Error", e.Message.ToString());
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
             
 
@@ -185,23 +195,46 @@ namespace MvcApplication1.Controllers
             req.Profession = Convert.ToInt32(fc["profession"]);
             req.Purpose = fc["purpose"].ToString();
             req.Status = 0;
+
+
             try
             {
+                var prevReq = user.Requesters.FirstOrDefault(r => r.EmailId == req.EmailId);
+
+                if (prevReq != null)
+                {
+                    Response.StatusCode = 400;
+                    if(prevReq.Status == 0)
+                    {
+                        return SendErrorResponse("Bad Request", "Request Already Submitted for this email id. Please wait till you get the valid login Id and password");
+                    }
+                    else
+                    {
+                        return SendErrorResponse("Bad Request", "Request Already Submitted for this email id. Please check your email for login id and Password");
+                    }
+                    
+                }
+
                 user.Requesters.Add(req);
                 if (user.SaveChanges() > 0)
                 {
-                    return GenericRedirect(Url.Action("Index", "Home"));
+                    //return GenericRedirect(Url.Action("Index", "Home"));
+                    Response.StatusCode = 200;
+                    return SendAjaxResponse("OK", new
+                    {
+                        message = "Request successfully sent to admin for approval. Once approved you will get an emailid and password by email."
+                    });
                 }
                 else
                 {
                     //ViewBag.msg = "Failed to Save Data";
-                    return GenericRedirect(Url.Action("Register", "Auth"));
+                    return SendRedirectResponse(Url.Action("Register", "Auth"));
                 }
             }
             catch (Exception e)
             {
                 Response.StatusCode = 500;
-                return SendErrorResponse(e);
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
         }
 
@@ -231,7 +264,7 @@ namespace MvcApplication1.Controllers
             catch (Exception e)
             {
                 Response.StatusCode = 500;
-                return SendErrorResponse(e);
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
             
         }
@@ -279,12 +312,12 @@ namespace MvcApplication1.Controllers
             {
                 //TODO : Handle this case when the user is already active
             }
-            return GenericRedirect(Url.Action("Requesters","Home"));
+            return SendRedirectResponse(Url.Action("Requesters","Home"));
                  }
             catch (Exception e)
             {
                 Response.StatusCode=500;
-                return SendErrorResponse(e);
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
         }
 
@@ -294,7 +327,7 @@ namespace MvcApplication1.Controllers
             {
                 return userManager.IsInRole(user.Id, "Admin");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ViewBag.message = e.Message.ToString();
                 return false;

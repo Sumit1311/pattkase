@@ -19,18 +19,23 @@ function navRequestHandler() {
                         return;
                     }
                     debugger;
-                    if(result != "") {
+                    if(typeof(result) == "string") {
                         try{
                             var response = JSON.parse(result);
                         } catch(exception) {
                             var response = {};
                         }
-                    } else {
+
+                    }
+                    else if (typeof (result) == "object") {
+                        response = result;
+                    }
+                    else {
                         var response = {};
                     }
-                    if(response.redirect && response.redirect.length != 0)
+                    if(response.body.redirect && response.body.redirect.length != 0)
                     {
-                       deferred.resolve(window.location.replace(response.redirect));
+                       deferred.resolve(window.location.replace(response.body.redirect));
                        return;
                     }
                     deferred.resolve({

@@ -2,9 +2,21 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <%@import Namespace="MvcApplication1.Models" %>
-    
-<form action="/Auth/Register" method="POST">
+<div id="_nav_register_div">
+<form action="/Auth/Register" method="POST" >
     <p ><h3 class="text-center">Sign up</h3></p>
+     <div id="_nav_register_error" class="form-group d-none">
+				<div class="">
+					<div class="alert alert-danger" style="padding: 7px; font-size: 11px; margin-bottom: 0px;" role="alert">
+					</div>
+				</div>
+         </div>
+         <div id="_nav_register_success" class="form-group d-none">
+         <div class="">
+					<div class="alert alert-success" style="padding: 7px; font-size: 11px; margin-bottom: 0px;" role="alert">
+					</div>
+				</div>
+			</div>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
@@ -41,9 +53,10 @@
     <textarea class="form-control" id="purposeId" name="purpose" rows="3" placeholder="Max. 100 characters"></textarea>
         
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button id="_nav_register_button" type="submit" class="btn btn-primary">Submit</button>
   <!-- <button type="submit" class="btn btn-primary">Cancel</button> -->
 </form>
+    </div>    
 
 
 </asp:Content>

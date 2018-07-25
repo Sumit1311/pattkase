@@ -31,7 +31,7 @@ navLogInHelper.prototype.logInHandler = function(event, that) {
                if(typeof error == "string") {
                 self.showError(error);
                } else {
-                self.showError(error.subMessage);
+                self.showError(error.body.subMessage);
                }
                $("#_nav_login_button").prop('disabled', false);
            });
@@ -45,7 +45,7 @@ navLogInHelper.prototype.logIn = function(form) {
 
 navLogInHelper.prototype.showError = function(message) {
     $("#_nav_login_error .alert").text(message);
-    $("#_nav_login_error").removeClass("hidden");
+    $("#_nav_login_error").removeClass("d-none");
 }
 
 registerLogInHandlers();
@@ -72,5 +72,5 @@ function resetPassword()
 
 function toggle(element)
 {
-    $(element).toggleClass("hidden");
+    $(element).toggleClass("d-none");
 }

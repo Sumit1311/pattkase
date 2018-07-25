@@ -2,7 +2,8 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
-<h2>Internal Server Error</h2>
+<h2><%= this.ViewBag.message %></h2>
+    <p><%= this.ViewBag.subMessage %></p>
 
 </asp:Content>
 
