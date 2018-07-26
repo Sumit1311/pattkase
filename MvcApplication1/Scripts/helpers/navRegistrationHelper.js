@@ -30,7 +30,9 @@ navRegistrationHelper.prototype.registrationHandler = function(event, that) {
            var self = this;
     this.registration(form)
         .then(function (response) {
-            self.showSuccess(response.body.message);
+            self.showSuccess(response.body.body.message);
+            $("#_nav_register_success .alert-success").focus();
+            $("#_nav_register_button").prop('disabled', false);
         })
            .catch(function(error){
                    
@@ -51,11 +53,17 @@ navRegistrationHelper.prototype.registration = function(form) {
 navRegistrationHelper.prototype.showError = function(message) {
     $("#_nav_register_error .alert-danger").text(message);
     $("#_nav_register_error").removeClass("d-none");
+    $('html,body').animate({
+        scrollTop: $("#" + "_nav_register_error").offset().top
+    }, 'slow');
 }
 
 navRegistrationHelper.prototype.showSuccess = function (message) {
     $("#_nav_register_success .alert-success").text(message);
     $("#_nav_register_success").removeClass("d-none");
+    $('html,body').animate({
+        scrollTop: $("#" + "_nav_register_success").offset().top
+    }, 'slow');
 }
 
 navRegistrationHelper.prototype.hideError = function () {
