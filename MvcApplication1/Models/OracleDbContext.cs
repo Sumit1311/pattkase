@@ -90,6 +90,47 @@ namespace MvcApplication1.Models
         //public ICollection<Login> Logins {get; set;}
     }
 
+    class CasePaper
+    {
+        public string[] Countries = 
+        {
+          "India",
+          "US"
+        };
+        public string[] Courts = 
+        {
+            "District Court"
+        };
+        public string[] Suits =
+        {
+
+        };
+        public string[] Status =
+        {
+        };
+        [Key]
+        public string CaseNo;
+        public string Plaintiff;
+        public string Defendant;
+        public int Country;
+        public Int64 DateOfFiling;
+        public int CourtOfLaw;
+        public string Sequel;
+        public string JudgeName;
+        public int TypeOfSuit;
+        public string RelatedTo;
+        public string UnderSection;
+        public string PatentsAtIssue;
+        public string CaseSummary;
+        public string CourtInterpretation;
+        public Int64 DateOfJudgement;
+        public string CaseDecision;
+        public string FurtherAppeals;
+        public int Status;
+        public string CaseInDetail;
+        public string FlowChart;
+    }
+
     public class ApplicationDbContext : IdentityDbContext<Login>
     {
         //public DbSet<Login> Logins { get; set; }
