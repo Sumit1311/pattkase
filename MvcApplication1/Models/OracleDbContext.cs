@@ -66,21 +66,21 @@ namespace MvcApplication1.Models
         [Key]
         public string Id { get; set; }
 
-        [StringLength(255, MinimumLength = 3, ErrorMessage = "My Error Message")]
+        [StringLength(255, ErrorMessage = "My Error Message")]
         public string FullName { get; set; }
 
-        [StringLength(255, MinimumLength = 3, ErrorMessage = "My Error Message")]
+        [StringLength(255, ErrorMessage = "My Error Message")]
         public string Address { get; set; }
 
-        [StringLength(255, MinimumLength = 3, ErrorMessage = "My Error Message")]
+        [StringLength(255, ErrorMessage = "My Error Message")]
         public string NameOfOrganization { get; set; }
 
-        [StringLength(255, MinimumLength = 3, ErrorMessage = "My Error Message")]
+        [StringLength(255, ErrorMessage = "My Error Message")]
         public string EmailId { get; set; }
 
         public int Profession { get; set; }
 
-        [StringLength(255, MinimumLength = 3, ErrorMessage = "My Error Message")]
+        [StringLength(255, ErrorMessage = "My Error Message")]
         public string Purpose { get; set; }
 
         public int Status { get; set; }
@@ -90,7 +90,7 @@ namespace MvcApplication1.Models
         //public ICollection<Login> Logins {get; set;}
     }
 
-    class CasePaper
+    public class CasePaper
     {
         public string[] Countries = 
         {
@@ -105,36 +105,59 @@ namespace MvcApplication1.Models
         {
 
         };
-        public string[] Status =
+        public string[] Statuses =
         {
+               "Active",
+               "Inactive"
         };
         [Key]
-        public string CaseNo;
-        public string Plaintiff;
-        public string Defendant;
-        public int Country;
-        public Int64 DateOfFiling;
-        public int CourtOfLaw;
-        public string Sequel;
-        public string JudgeName;
-        public int TypeOfSuit;
-        public string RelatedTo;
-        public string UnderSection;
-        public string PatentsAtIssue;
-        public string CaseSummary;
-        public string CourtInterpretation;
-        public Int64 DateOfJudgement;
-        public string CaseDecision;
-        public string FurtherAppeals;
-        public int Status;
-        public string CaseInDetail;
-        public string FlowChart;
+        public string CaseNo { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string Plaintiff { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string Defendant { get; set; }
+        public int Country { get; set; }
+        public Int64 DateOfFiling { get; set; }
+        public int CourtOfLaw { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string Sequel { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string JudgeName { get; set; }
+        public int TypeOfSuit { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string RelatedTo { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string UnderSection { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string PatentsAtIssue { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string CaseSummary { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string CourtInterpretation { get; set; }
+        public Int64 DateOfJudgement { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string CaseDecision { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string FurtherAppeals { get; set; }
+        public int Status { get; set; }
+        [StringLength(10000, ErrorMessage = "My Error Message")]
+        public string CaseInDetail { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string FlowChart { get; set; }
+    }
+
+    public class SearchField
+    {
+        [Key]
+        public string Id { get; set; }
+        public string FieladName { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<Login>
     {
         //public DbSet<Login> Logins { get; set; }
         public DbSet<Requester> Requesters { get; set; }
+        public DbSet<CasePaper> CasePapers { get; set; }
         public ApplicationDbContext()
             : base()
         {
