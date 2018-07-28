@@ -57,7 +57,9 @@
             
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         <% if(HttpContext.Current.User.IsInRole("Admin")){ %>
-              <a class="dropdown-item" href="/Home/Requesters">Requesters</a>
+              <a class="dropdown-item" href="/Home/Requesters">Join Requests</a>
+            <a class="dropdown-item" href="/Dataset/ModifySearchFields">Edit Search Fields</a>
+            <a class="dropdown-item" href="/Dataset/BirdEyeView">Bird Eye View</a>
             <%} %>
           <a class="dropdown-item" href="/Auth/Logout">Log Out</a>
         </div>
@@ -82,6 +84,7 @@ var Q;
     <script src="/Scripts/util.js"></script>
     <script src="/Scripts/helpers/navLogInHelper.js"></script>
     <script src="/Scripts/helpers/navRegistrationHelper.js"></script>
+    <script src="/Scripts/helpers/navModifySearchFieldsHelper.js"></script>
 
 
     <asp:ContentPlaceHolder ID="ScriptSection" runat="server"></asp:ContentPlaceHolder>

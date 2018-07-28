@@ -196,6 +196,8 @@
   <ItemGroup>
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\DatasetController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -217,6 +219,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\helpers\navLogInHelper.js" />
+    <Content Include="Scripts\helpers\navModifySearchFieldsHelper.js" />
     <Content Include="Scripts\helpers\navRegistrationHelper.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\q-1.1.0.js" />
@@ -271,6 +274,7 @@
     <Content Include="Views\Auth\ViewRequester.aspx" />
     <Content Include="Views\Auth\Register.aspx" />
     <Content Include="Views\Auth\Login.aspx" />
+    <Content Include="Views\Dataset\EditSearchFields.aspx" />
     <Content Include="Views\Error-500.aspx" />
     <Content Include="Views\Home\Requesters.aspx" />
     <Content Include="Views\Home\Dashboard.aspx" />
@@ -303,6 +307,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Library\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

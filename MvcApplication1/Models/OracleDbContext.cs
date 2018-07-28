@@ -148,9 +148,31 @@ namespace MvcApplication1.Models
 
     public class SearchField
     {
+        public static string[] AllFields = 
+        {
+            "Plaintiff",
+            "Defendant",
+            "Date Of Filing",
+            "Court Of Law",
+            "Sequel",
+            "Judge Name",
+            "Type Of Suit",
+            "Related To",
+            "Under Section",
+            "Patents At Issue",
+            "Court Interpretation",
+            "Date Of Judgement",
+            "Case Decision",
+            "Further Appeals",
+            "Status",
+            "Keyword 1",
+            "Keyword 2"
+        };
         [Key]
         public string Id { get; set; }
-        public string FieladName { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
+        public string FieldName { get; set; }
+        public bool Show { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<Login>
@@ -158,10 +180,23 @@ namespace MvcApplication1.Models
         //public DbSet<Login> Logins { get; set; }
         public DbSet<Requester> Requesters { get; set; }
         public DbSet<CasePaper> CasePapers { get; set; }
+        public DbSet<SearchField> SearchFields { get; set; }
         public ApplicationDbContext()
             : base()
         {
-
+            foreach(var i in SearchField.AllFields)
+            {
+                var s = SearchFields.FirstOrDefault(e => (e.FieldName == i));
+                if(s == null)
+                {
+                    SearchFields.Add(new SearchField
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        FieldName = i,
+                        Show = false
+                    });
+                }
+            }
         
         }
 
