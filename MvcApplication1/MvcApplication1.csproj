@@ -218,6 +218,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\helpers\navDataSetHelper.js" />
     <Content Include="Scripts\helpers\navLogInHelper.js" />
     <Content Include="Scripts\helpers\navModifySearchFieldsHelper.js" />
     <Content Include="Scripts\helpers\navRegistrationHelper.js" />
@@ -274,6 +275,7 @@
     <Content Include="Views\Auth\ViewRequester.aspx" />
     <Content Include="Views\Auth\Register.aspx" />
     <Content Include="Views\Auth\Login.aspx" />
+    <Content Include="Views\Dataset\BirdEyeView.aspx" />
     <Content Include="Views\Dataset\EditSearchFields.aspx" />
     <Content Include="Views\Error-500.aspx" />
     <Content Include="Views\Home\Requesters.aspx" />

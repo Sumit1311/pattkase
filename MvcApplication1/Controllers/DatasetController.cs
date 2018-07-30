@@ -51,5 +51,15 @@ namespace MvcApplication1.Controllers
                 message="Successfully Saved Data."
             });
         }
+
+        [HttpGet]
+        public ActionResult BirdEyeView()
+        {
+            ViewBag.Countries = CasePaper.Countries;
+            ViewBag.Courts = CasePaper.Courts;
+            ViewBag.Suits = CasePaper.Suits;
+            ViewBag.Statuses = CasePaper.Statuses;
+            return View("BirdEyeView");
+        }
     }
 }

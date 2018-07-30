@@ -5,6 +5,7 @@
 <head runat="server">
     <title>Pattkase</title>
     <link href="/Content/bootstrap.css" rel="Stylesheet"></link>
+ 
     <style>
         .logo_main
 {
@@ -31,8 +32,12 @@
 }
 
         </style>
+
     <!-- <link href="/Content/site.css" rel="Stylesheet"></link>-->
     <asp:ContentPlaceHolder ID="StyleSection" runat="server"></asp:ContentPlaceHolder>
+
+
+
 </head>
 <body>
     <!-- <form id="form1" runat="server"> -->
@@ -78,7 +83,7 @@
     <script>
 var Q;
             </script>
-    <script src="/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="/Scripts/jquery-3.1.1.min.js"></script>
     <script src="/Scripts/bootstrap.min.js"></script>
      <script src="/Scripts/q-1.1.0.js"></script>
     <script src="/Scripts/util.js"></script>

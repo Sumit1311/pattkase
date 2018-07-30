@@ -92,20 +92,26 @@ namespace MvcApplication1.Models
 
     public class CasePaper
     {
-        public string[] Countries = 
+        public static  string[] Countries = 
         {
           "India",
-          "US"
+          "US",
+          "Other"
         };
-        public string[] Courts = 
+        public static string[] Courts = 
         {
-            "District Court"
+            "District Court (DC)",
+            "High Court (HC)",
+            "Supreme Court (SC)"
         };
-        public string[] Suits =
+        public static string[] Suits =
         {
-
+            "Patenting",
+            "Novelty",
+            "Subject Matter",
+            "Obviousness"
         };
-        public string[] Statuses =
+        public static string[] Statuses =
         {
                "Active",
                "Inactive"
