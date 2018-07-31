@@ -1,4 +1,6 @@
-﻿function navDataSetHelper() {
+﻿var newRows = [], deletedRows = [], updatedRows = [];
+
+function navDataSetHelper() {
     this.columnNames = [{
         "name": "caseNo",
         "label": "Case Number",
@@ -219,6 +221,17 @@ navDataSetHelper.prototype.hideSuccess = function () {
     $("#_nav_bird_eye_view_success").addClass("d-none");
 }
 
+navDataSetHelper.prototype.onInsertNewRow = function (obj) {
+    newRows.push($(obj).last());
+}
+
+navDataSetHelper.prototype.onDeleteRow = function (obj) {
+    
+}
+
+navDataSetHelper.prototype.onChangeRow = function(obj, cell, val) {
+}
+
 registerDataSetHandlers();
 
 function registerDataSetHandlers() {
@@ -237,12 +250,53 @@ function registerDataSetHandlers() {
         headers.push(d.columnNames[i].label);
         widths.push(d.columnNames[i].width);
         types.push(d.columnNames[i].columnType);
+
+
     }
+
+    
 
     $('#_nav_bird_eye_view_div').jexcel({
         data: data,
         colHeaders: headers,
         colWidths: widths,
-        columns: types
+        columns: types,
+        oninsertrow : function(obj) { new navDataSetHelper().onInsertNewRow(obj);},
+        ondeleterow : function(obj) { new navDataSetHelper().onDeleteRow(obj);},
+        onchange: function (obj, cell, val) { new navDataSetHelper().onChangeRow(obj, cell, val); }
+    });
+    
+    $('#_nav_bird_eye_view_div').jexcel('updateSettings', {
+        table: function (instance, cell, col, row, val, id) {
+            debugger;
+            // Number formating
+            if (col == 3) {
+                // Get text
+                txt = $(cell).text();
+                // Format text
+                txt = numeral(txt).format('0,0.00');
+                // Update cell value
+                $(cell).html(' $ ' + txt);
+            }
+
+            // Odd row colours
+            if (row % 2) {
+                $(cell).css('background-color', '#edf3ff');
+            }
+
+            // Remove controls for the last row
+            if (row == 9) {
+                if (col < 3) {
+                    $(cell).html('');
+                }
+
+                if (col == 2) {
+                    $(cell).html('Total');
+                }
+
+                $(cell).css('background-color', '#f46e42');
+                $(cell).css('color', '#fff');
+            }
+        }
     });
 }
