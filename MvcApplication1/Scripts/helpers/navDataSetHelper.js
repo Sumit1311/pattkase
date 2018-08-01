@@ -1,7 +1,14 @@
-﻿var newRows = [], deletedRows = [], updatedRows = [];
+﻿var newRows = [], deletedRows = [], updatedRows = [], flags = [];
 
 function navDataSetHelper() {
     this.columnNames = [{
+        "name" : "id",
+        "label": "Id",
+        "width": 90,
+        "columnType": {
+            type: 'hidden'
+        }
+    },{
         "name": "caseNo",
         "label": "Case Number",
         "width": 90,
@@ -221,28 +228,23 @@ navDataSetHelper.prototype.hideSuccess = function () {
     $("#_nav_bird_eye_view_success").addClass("d-none");
 }
 
-navDataSetHelper.prototype.onInsertNewRow = function (obj) {
-    newRows.push($(obj).last());
+navDataSetHelper.prototype.onInsertNewRow = function (obj, rowNumber) {
 }
 
-navDataSetHelper.prototype.onDeleteRow = function (obj) {
+navDataSetHelper.prototype.onDeleteRow = function (obj, rowNumber, numOfRows, records) {
     
 }
 
-navDataSetHelper.prototype.onChangeRow = function(obj, cell, val) {
+navDataSetHelper.prototype.onChangeRow = function (obj, cell, val) {
+    debugger;
 }
+
 
 registerDataSetHandlers();
 
 function registerDataSetHandlers() {
     $("#_nav_bird_eye_view_button").click(function (event) { new navDataSetHelper().dataSetHandler(event, this) });
-    data = [
-            ['Mazda', 2001, 2000, 0 , '2018-08-02'],
-            ['Pegeout', 2010, 5000],
-            ['Honda Fit', 2009, 3000],
-            ['Honda CRV', 2010, 6000],
-    ];
-
+    var dataset = getData();
     var d = new navDataSetHelper();
     var headers = [], widths = [], types = [];
 
@@ -250,53 +252,26 @@ function registerDataSetHandlers() {
         headers.push(d.columnNames[i].label);
         widths.push(d.columnNames[i].width);
         types.push(d.columnNames[i].columnType);
-
-
     }
 
     
 
     $('#_nav_bird_eye_view_div').jexcel({
-        data: data,
+        data: dataset,
         colHeaders: headers,
         colWidths: widths,
         columns: types,
-        oninsertrow : function(obj) { new navDataSetHelper().onInsertNewRow(obj);},
-        ondeleterow : function(obj) { new navDataSetHelper().onDeleteRow(obj);},
+        oninsertrow : function(obj) { new navDataSetHelper().onInsertNewRow(obj, rowNumber);},
+        ondeleterow: function (obj, rowNumber, numOfRows, records) { debugger; new navDataSetHelper().onDeleteRow(obj, rowNumber, numOfRows, records); },
         onchange: function (obj, cell, val) { new navDataSetHelper().onChangeRow(obj, cell, val); }
     });
     
     $('#_nav_bird_eye_view_div').jexcel('updateSettings', {
         table: function (instance, cell, col, row, val, id) {
-            debugger;
-            // Number formating
-            if (col == 3) {
-                // Get text
-                txt = $(cell).text();
-                // Format text
-                txt = numeral(txt).format('0,0.00');
-                // Update cell value
-                $(cell).html(' $ ' + txt);
-            }
-
-            // Odd row colours
-            if (row % 2) {
-                $(cell).css('background-color', '#edf3ff');
-            }
-
-            // Remove controls for the last row
-            if (row == 9) {
-                if (col < 3) {
-                    $(cell).html('');
-                }
-
-                if (col == 2) {
-                    $(cell).html('Total');
-                }
-
-                $(cell).css('background-color', '#f46e42');
-                $(cell).css('color', '#fff');
-            }
+            /*if(col == 0 &&  !($($(cell).siblings()[0]).prop("id"))) {
+                $($(cell).siblings()[0]).prop("id", ids[row]);
+            }*/
+            
         }
     });
 }

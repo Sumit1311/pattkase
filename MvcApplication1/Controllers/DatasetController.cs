@@ -55,10 +55,12 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult BirdEyeView()
         {
+            List<CasePaper> dataset = user.CasePapers.ToList();
             ViewBag.Countries = CasePaper.Countries;
             ViewBag.Courts = CasePaper.Courts;
             ViewBag.Suits = CasePaper.Suits;
             ViewBag.Statuses = CasePaper.Statuses;
+            ViewBag.Dataset = dataset;
             return View("BirdEyeView");
         }
     }

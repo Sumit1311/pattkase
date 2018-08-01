@@ -80,6 +80,20 @@
             <%} %>
             return data;
         };
+        var getData = function () {
+            var data = [];
+            
+            <% c = this.ViewBag.Dataset; %>
+            <% for(int i = 0; i < c.Count; i++) {%>
+            data.push(["<%= c[i].Id %>","<%= c[i].CaseNo %>", "<%= c[i].Plaintiff %>", "<%=c[i].Defendant %>",<%= c[i].Country %>,
+                moment(<%= c[i].DateOfFiling %>).format("YYYY-MM-DD"), <%=c[i].CourtOfLaw %>, "<%= c[i].Sequel %>", "<%= c[i].JudgeName %>", <%= c[i].TypeOfSuit %>,
+                "<%= c[i].RelatedTo %>", "<%= c[i].UnderSection %>", "<%= c[i].PatentsAtIssue %>", "<%= c[i].CaseSummary %>", "<%= c[i].CourtInterpretation %>",
+            moment(<%= c[i].DateOfJudgement%>).format("YYYY-MM-DD"), "<%= c[i].CaseDecision %>", "<%= c[i].FurtherAppeals %>", <%= c[i].Status %>, "<%= c[i].CaseInDetail %>", "<%= c[i].FlowChart %>"]);
+            
+            <%}%>
+
+            return data;
+        }
     </script>
     <script src="/Scripts/helpers/navDataSetHelper.js"></script>
 

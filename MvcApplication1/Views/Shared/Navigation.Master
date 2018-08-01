@@ -83,9 +83,10 @@
     <script>
 var Q;
             </script>
-    <script src="/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="/Scripts/jquery-3.2.1.min.js"></script>
     <script src="/Scripts/bootstrap.min.js"></script>
      <script src="/Scripts/q-1.1.0.js"></script>
+    <script src="/Scripts/moment.min.js"></script>
     <script src="/Scripts/util.js"></script>
     <script src="/Scripts/helpers/navLogInHelper.js"></script>
     <script src="/Scripts/helpers/navRegistrationHelper.js"></script>

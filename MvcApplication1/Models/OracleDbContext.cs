@@ -117,6 +117,8 @@ namespace MvcApplication1.Models
                "Inactive"
         };
         [Key]
+        public string Id { get; set; }
+        [StringLength(255, ErrorMessage = "My Error Message")]
         public string CaseNo { get; set; }
         [StringLength(255, ErrorMessage = "My Error Message")]
         public string Plaintiff { get; set; }

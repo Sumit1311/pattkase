@@ -3167,7 +3167,7 @@ var methods = {
             // Insert events
             if ($.fn.jexcel.ignoreEvents != true) {
                 if (typeof(options.oninsertrow) == 'function') {
-                    options.oninsertrow($(this), rowNumber);
+                    options.oninsertrow($(this));
                 }
             }
         }
