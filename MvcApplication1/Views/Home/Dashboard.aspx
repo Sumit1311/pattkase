@@ -3,17 +3,31 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
 <h2>Search Screen</h2>
-    
-        <div>
-        <input placeholder="Case Search"></input>
-             <span class="input-group  col-sm-4">
-        <label><a href="">Search History</a></label>
-                 </span>
-            <span class="input-group  col-sm-4">
-        <label><a href="">Search Help</a></label>
-                </span>
-            <br>
+    <form id="_nav_search_form" action="/Dataset/Search" method="POST">
+        <div class="form-row">
+        <div class="form-group col-md-8">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Case Search">
+  </div>
+        <div class="col-md-2">
+            <a href="/Dataset/SearchHistory" class="btn">Search History</a>
         </div>
+            <div class="col-md-2">
+            <a href="/Dataset/SearchHistory" class="btn">Search Help</a>
+        </div>
+            </div>
+        <div class="form-row">
+            <div class="form-check form-check-inline col-md-3">
+  <input class="form-check-input" type="radio" id="inlineCheckbox1" value="option1">
+  <label class="form-check-label" for="inlineCheckbox1">Case Number</label>
+</div>
+<div class="form-check form-check-inline col-md-3">
+  <input class="form-check-input" type="radio" id="inlineCheckbox2" value="option2">
+  <label class="form-check-label" for="inlineCheckbox2">Fielded Search Criteria</label>
+</div>
+        </div>
+        
+
+    </form>
     <div>
         <label>Case Search Style</label>
         <span class="input-group  col-sm-4">
