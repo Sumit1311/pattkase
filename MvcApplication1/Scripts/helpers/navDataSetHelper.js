@@ -14,14 +14,18 @@ function navDataSetHelper() {
         "width": 90,
         "columnType": {
             type: 'text'
-        }
+            }
     }, {
         "name": "plaintiff",
         "label": "Plaintiff",
         "width": 72,
         "columnType": {
             type: 'text'
-        }
+            },
+            "addSearchField": function (parent) {
+                $(parent).append('<input type="text" class="form-control" id="_nav_plaintiff_search_field" name="' + this.name + ' " placeholder="Enter ' + this.label + '">');
+
+            }
     }, {
         "name": "defendant",
         "label": "Defendant",

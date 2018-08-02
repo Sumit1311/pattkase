@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Navigation.Master" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-
+<%@import Namespace="MvcApplication1.Models" %>
 <h2>Search Screen</h2>
     <form id="_nav_search_form" action="/Dataset/Search" method="POST">
         <div class="form-row">
@@ -15,42 +15,134 @@
             <a href="/Dataset/SearchHistory" class="btn">Search Help</a>
         </div>
             </div>
-        <div class="form-row">
+        
+        <div class="card ">
+            <div class="card-header text-white bg-info mb-3">
+              
+
+                          <h5>Case Search Style</h5>
+
+    
+                  <div class="form-row">
             <div class="form-check form-check-inline col-md-3">
-  <input class="form-check-input" type="radio" id="inlineCheckbox1" value="option1">
+  <input class="form-check-input" type="radio" id="_nav_search_style_case_no" name="searchStyle" value="caseNo">
   <label class="form-check-label" for="inlineCheckbox1">Case Number</label>
 </div>
 <div class="form-check form-check-inline col-md-3">
-  <input class="form-check-input" type="radio" id="inlineCheckbox2" value="option2">
-  <label class="form-check-label" for="inlineCheckbox2">Fielded Search Criteria</label>
+  <input class="form-check-input" type="radio" id="_nav_search_style_field" name="searchStyle" value="fielded">
+  <label class="form-check-label" for="inlineCheckbox2">Fielded</label>
 </div>
         </div>
+  </div>
+            <div class="card-body">
+            <div id="_nav_case_no_search">
+                <h6 class="card-title">Case Number Search</h6>
+                <div class="form-group row">
+    <label for="inputPassword" class="col-md-3 col-form-label">Case Number : </label>
+    <div class="col-md-6">
+      <input type="text" class="form-control" id="inputPassword" placeholder="Enter Case Number" name="caseNo">
+    </div>
+  </div>
+            </div>
+            <div id="_nav_fielded_search ">
+                <h6 class="card-title">Fielded Search Criteria</h6>
+                <% var fields = this.ViewBag.searchFields; %>
+                <% for (int i = 0; i < fields.Count; i++) {
+                        if(i == 0)
+                        {%>
+                           <div class="form-row form-group">
+                                                <div class="col-md-4">
+                            <%= InputSearchFields.getInputElement(fields[i].FieldName) %>
+                            </div>
+                               </div>
+                <%
+                        } else
+                        {
+                            if((i + 1) % 2 == 0)
+                            {%>
+                                
+                                   </div>
+                                    <div class="form-row form-group">      
+                                
+                                        <div class="col-md-2">
+                                            <select name="operator_<%= InputSearchFields.getInputSearchField(fields[i].FieldName).name%>" class="custom-select">
+                          <option value="0" selected>Select Operator</option>
+                          <option value="1">And (^)</option>
+                          <option value="2">Or (v)</option>
+                          <option value="3">Not (~)</option>
+                        </select>
+                                         </div>
+                                         <div class="col-md-4">
+                            <%= InputSearchFields.getInputElement(fields[i].FieldName) %>
+                            </div>
+                            <%} else
+                            {%>
+                                        <div class="col-md-2">
+                                            <select class="custom-select">
+                          <option value="0" selected>Select Operator</option>
+                          <option value="1">And (^)</option>
+                          <option value="2">Or (v)</option>
+                          <option value="3">Not (~)</option>
+                        </select>
+                                         </div>
+                                         <div class="col-md-4">
+                            <%= InputSearchFields.getInputElement(fields[i].FieldName) %>
+                            </div>
+                            <%}
+                                    }
+                                    if(i == fields.Count - 1)
+                                    {%>
+                                        </div>
+                                    <%}
+                                } %>
+                </div>
+                <!--<div class="form-row form-group">
+                    <div class="col-md-4">
+                    <select class="custom-select">
+  <option selected>Select Country</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+                        </div>
+                    </div>
+                <div class="form-row form-group">
+                    <div class="col-md-2">
+                    <select class="custom-select">
+  <option selected>Select Operator</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+                        </div>
+                    <div class="col-md-4">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Plaintiff">
+  </div>
+                                <div class="col-md-2">
+                    <select class="custom-select">
+  <option selected>Select Operator</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+                        </div>
+                    <div class="col-md-4">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Defendant">
+  </div>
+                </div>
+            </div>
+        </div>-->
+            <div class="card-footer text-white bg-info mb-3">
+                 <button type="submit" class="button btn-success btn-md border-white align-middle active rounded-circle">Run</button>
+            </div>
+        </div>
+        
+        
+            
         
 
     </form>
-    <div>
-        <label>Case Search Style</label>
-        <span class="input-group  col-sm-4">
-        <label class="radio-inline"><input type="radio" name="optradio" checked>Fielded</label>
-            </span>
-        <span class="input-group  col-sm-4">
-        <label class="radio-inline"><input type="radio" name="optradio">Case No.</label>
-            </span>
-    </div>
-   
-    
-    <div>
-        <br />
-        <label>Case No.</label>
-        <span class="input-group  col-sm-4">
-        <input placeholder="Enter Case No."/>
-            </span>
-        <br />
-        
-    </div>
-        <br />
-    <label>Fielded Search Criteria</label>
-   <Table>
+  <!-- <Table>
        <tr>
            <th><label>Country</label>  </th>
               <th> <div class="dropdown">
@@ -119,7 +211,7 @@
     <li><a href="#">NOT</a></li>
   </ul>
                </div></th>
-           <!-- This is Dependent on Country Selected -->
+
            <th> <div class="dropdown"> 
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> Court of Law <span class="caret"></span></button>
                 <ul class="dropdown-menu">
@@ -138,7 +230,6 @@
     <li><a href="#">NOT</a></li>
   </ul>
                </div></th>
-           <!-- This is Dependent on Country Selected -->
            <th> <div class="dropdown"> 
                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Type of Suit Filed<span class="caret"></span></button>
                 <ul class="dropdown-menu">
@@ -182,7 +273,7 @@
 
         </div>
     
-        </div>
+        </div> -->
 
 
 </asp:Content>

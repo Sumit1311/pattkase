@@ -33,6 +33,7 @@ namespace MvcApplication1.Controllers
             ClaimsIdentity identity = User.Identity as ClaimsIdentity;
             //ViewBag.Email = claimsIdentity.FindFirst(ClaimTypes.Email).Value;
             //ViewBag.Role = identity.HasClaim(ClaimTypes.Role,"Admin");
+            ViewBag.searchFields = user.SearchFields.Where(f => (f.Show == true)).ToList();
             return View("Dashboard");
         }
 

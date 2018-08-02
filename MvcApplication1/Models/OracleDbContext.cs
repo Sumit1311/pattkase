@@ -379,7 +379,9 @@ namespace MvcApplication1.Models
             "Further Appeals",
             "Status",
             "Keyword 1",
-            "Keyword 2"
+            "Keyword 2",
+            "Country"
+
         };
         [Key]
         public string Id { get; set; }
@@ -388,6 +390,165 @@ namespace MvcApplication1.Models
         public bool Show { get; set; }
     }
 
+    public class InputSearchField
+    {
+        public string fieldType { get; set; }
+        public string label { get; set; }
+        public string name { get; set; }
+        public string value { get; set; }
+    }
+
+    public class InputSearchFields
+    {
+        public static InputSearchField getInputSearchField(string field)
+        {
+            InputSearchField f = new InputSearchField( );
+            switch(field)
+            {
+                case "Plaintiff":
+                    //f.element ="<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" name=\"plaintiff\" placeholder=\"Plaintiff\">";
+                    f.fieldType = "text";
+                    f.label = "Plaintiff";
+                    f.name = "plaintiff";
+                    break;
+                case "Defendant":
+                    f.fieldType = "text";
+                    f.label = "Defendant";
+                    f.name = "defendant";
+                    break;
+                case "Date Of Filing":
+                    f.fieldType = "date";
+                    f.label = "Date Of Filing";
+                    f.name = "dateOfFiling";
+                    break;
+
+                case "Court Of Law":
+                    f.fieldType = "dropdown";
+                    f.label = "Court Of Law";
+                    f.name = "courtOfLaw";
+                    break;
+                case "Sequel":
+                    f.fieldType = "text";
+                    f.label = "Sequel";
+                    f.name = "sequel";
+                    break;
+                case "Judge Name":
+                    f.fieldType = "text";
+                    f.label = "Judge Name";
+                    f.name = "judgeName";
+                    break;
+                case "Type Of Suit":
+                    f.fieldType = "dropdown";
+                    f.label = "Type Of Suit";
+                    f.name = "typeOfSuit";
+                    break;
+                case "Related To":
+                    f.fieldType = "text";
+                    f.label = "Related To";
+                    f.name = "relatedTo";
+                    break;
+                case "Under Section":
+                    f.fieldType = "text";
+                    f.label = "Under Section";
+                    f.name = "underSection";
+                    break;
+                case "Patents At Issue":
+                    f.fieldType = "text";
+                    f.label = "Patents At Issue";
+                    f.name = "patentsAtIssue";
+                    break;
+                case "Court Interpretation":
+                    f.fieldType = "text";
+                    f.label = "Court Interpretation";
+                    f.name = "courtInterpretation";
+                    break;
+                case "Date Of Judgement":
+                    f.fieldType = "date";
+                    f.label = "Date Of Judgement";
+                    f.name = "dateOfJudgement";
+                    break;
+                case "Case Decision":
+                    f.fieldType = "text";
+                    f.label = "Case Decision";
+                    f.name = "caseDecision";
+                    break;
+                case "Further Appeals":
+                    f.fieldType = "text";
+                    f.label = "Further Appeals";
+                    f.name = "futherAppeals";
+                    break;
+                case "Status":
+                    f.fieldType = "dropdown";
+                    f.label = "Status";
+                    f.name = "status";
+                    break;
+                   case "Keyword 1":
+                    f.fieldType = "text";
+                    f.label = "Keyword 1";
+                    f.name = "key1";
+                    break;
+                case "Keyword 2":
+                    f.fieldType = "text";
+                    f.label = "Keyword 2";
+                    f.name = "key2";
+                    break;
+                case "Country":
+                    f.fieldType = "dropdown";
+                    f.label = "Country";
+                    f.name = "country";
+                    break;
+            }
+            return f;
+        }
+        public static string getInputElement(string field)
+        {
+            InputSearchField f = InputSearchFields.getInputSearchField(field);
+            string element;
+            if(f.fieldType == "text")
+            {
+                element = "<input type=\"text\" class=\"form-control\" name=\""+f.name+"\" id=\"_nav_search_field_"+f.name+"\" placeholder=\""+f.label+"\">";
+
+            } else if(f.fieldType == "dropdown")
+            {
+                element = "<select class=\"custom-select\"> " +
+                    "<option selected value = \"0\"> Select " + f.label + "</option>";
+
+                string[] c;
+                if(f.name == "country")
+                {
+                    c = CasePaper.Countries;
+                    
+                } else if(f.name == "typeOfSuit")
+                {
+                    c = CasePaper.Suits;
+                } else if(f.name == "status")
+                {
+                    c = CasePaper.Statuses;
+                } else if(f.name == "courtOfLaw")
+                {
+                    c = CasePaper.Courts;
+                } else
+                {
+                    c = null;
+                }
+                if(c != null) { 
+                for (var i = 0; i < c.Length; i++)
+                {
+                    element += "< option value = \"" + (i + 1) + "\" >" + c[i] + "</ option >";
+                }
+                }
+                element += "</select>";
+       
+            } else if(f.fieldType == "date")
+            {
+                element = "<input type=\"text\" class=\"form-control\" name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\">";
+            } else
+            {
+                element = "";
+            }
+            return element;
+        }
+    }
     public class ApplicationDbContext : IdentityDbContext<Login>
     {
         //public DbSet<Login> Logins { get; set; }

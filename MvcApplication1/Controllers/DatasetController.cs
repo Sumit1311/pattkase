@@ -109,6 +109,37 @@ namespace MvcApplication1.Controllers
             return SendRedirectResponse("/Dataset/BirdEyeView");
         }
 
-
+        [HttpPost]
+        public ActionResult Search(FormCollection fc)
+        {
+            string searchStyle = fc["searchStyle"];
+            if(searchStyle == "caseNo")
+            {
+                string caseNo = fc["caseNo"];
+                var c = user.CasePapers.Where(cp => cp.CaseNo == caseNo).FirstOrDefault();
+                if(c != null)
+                {
+                    ViewBag.cases = c;
+                    return View("ViewCase");
+                }
+                
+            }
+            else if(searchStyle == "fielded")
+            {
+                var fields = user.SearchFields.Where(f => f.Show == true).ToList();
+                List<InputSearchField> list = new List<InputSearchField>();
+                var i = 0;
+                for (i = 0; i < fields.Count;i++ )
+                {
+                    InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName);
+                    if(fc[f.name] != null || fc[f.name] != "" || fc[f.name] != "0")
+                    {
+                        f.value = fc[f.name];
+                        list.Add(f);
+                    }
+                }
+            }
+            return View("SearchResults");
+        }
     }
 }
