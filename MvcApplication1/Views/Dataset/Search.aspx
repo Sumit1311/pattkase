@@ -1,7 +1,16 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Navigation.Master" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+﻿<%@ Page Title="Case Search" Language="C#" MasterPageFile="~/Views/Shared/Navigation.Master" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+
+<script runat="server">
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+</script>
+
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
-
+    <div style="padding:initial">
 <h2>Search Screen</h2>
     
         <div>
@@ -170,7 +179,8 @@
     
         </div>
 
-
+ 
+    
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="StyleSection" runat="server">

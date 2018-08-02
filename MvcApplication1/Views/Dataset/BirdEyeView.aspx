@@ -17,7 +17,7 @@
 <div id="_nav_bird_eye_view_div" class="table-responsive">
     </div>    
 
-    <button id="_nav_bird_eye_view_button" type="submit" class="btn btn-primary" style="margin-top: 20px;">Save</button>
+    <a id="_nav_bird_eye_view_button" href="/Dataset/BirdEyeView" class="btn btn-primary" style="margin-top: 20px;">Save</a>
         
 </asp:Content>
 
@@ -35,6 +35,7 @@
         .jexcel > tbody > tr > td {
             overflow : visible;
             white-space : normal;
+            overflow-wrap : break-word;
         }
         .jexcel .jexcel_arrow {
             float : none
@@ -51,32 +52,36 @@
         var getSourceCountries = function () {
             var data = [];
             <% var c = this.ViewBag.Countries; %>
+            data.push({ 'id': '0', 'name': 'Select' });
             <% for(var i = 0; i < c.Length; i++) {%>
-            data.push({'id' : '<%= i %>', 'name' : '<%= c[i] %>'});
+            data.push({'id' : '<%= i+1 %>', 'name' : '<%= c[i] %>'});
             <%} %>
             return data;
         };
         var getSourceCourts = function () {
             var data = [];
             <% c = this.ViewBag.Courts; %>
+            data.push({ 'id': '0', 'name': 'Select' });
             <% for(var i = 0; i < c.Length; i++) {%>
-            data.push({ 'id': '<%= i %>', 'name': '<%= c[i] %>' });
+            data.push({ 'id': '<%= i+1 %>', 'name': '<%= c[i] %>' });
             <%} %>
             return data;
         };
         var getSourceStatuses= function () {
             var data = [];
             <% c = this.ViewBag.Statuses; %>
+            data.push({ 'id': '0', 'name': 'Select' });
             <% for(var i = 0; i < c.Length; i++) {%>
-            data.push({ 'id': '<%= i %>', 'name': '<%= c[i] %>' });
+            data.push({ 'id': '<%= i+1 %>', 'name': '<%= c[i] %>' });
             <%} %>
             return data;
         };
         var getSourceSuits = function () {
             var data = [];
             <% c = this.ViewBag.Suits; %>
+            data.push({ 'id': '0', 'name': 'Select' });
             <% for(var i = 0; i < c.Length; i++) {%>
-            data.push({ 'id': '<%= i %>', 'name': '<%= c[i] %>' });
+            data.push({ 'id': '<%= i+1 %>', 'name': '<%= c[i] %>' });
             <%} %>
             return data;
         };
@@ -85,10 +90,10 @@
             
             <% c = this.ViewBag.Dataset; %>
             <% for(int i = 0; i < c.Count; i++) {%>
-            data.push(["<%= c[i].Id %>","<%= c[i].CaseNo %>", "<%= c[i].Plaintiff %>", "<%=c[i].Defendant %>",<%= c[i].Country %>,
-                moment(<%= c[i].DateOfFiling %>).format("YYYY-MM-DD"), <%=c[i].CourtOfLaw %>, "<%= c[i].Sequel %>", "<%= c[i].JudgeName %>", <%= c[i].TypeOfSuit %>,
-                "<%= c[i].RelatedTo %>", "<%= c[i].UnderSection %>", "<%= c[i].PatentsAtIssue %>", "<%= c[i].CaseSummary %>", "<%= c[i].CourtInterpretation %>",
-            moment(<%= c[i].DateOfJudgement%>).format("YYYY-MM-DD"), "<%= c[i].CaseDecision %>", "<%= c[i].FurtherAppeals %>", <%= c[i].Status %>, "<%= c[i].CaseInDetail %>", "<%= c[i].FlowChart %>"]);
+            data.push(["<%= (string)c[i].Id %>","<%= (string)c[i].CaseNo %>", "<%= (string)c[i].Plaintiff %>", "<%= (string)c[i].Defendant %>",<%= (int)c[i].Country %>,
+                moment(<%= (long)c[i].DateOfFiling %>).format("YYYY-MM-DD"), <%= (int)(c[i].CourtOfLaw) %>, "<%= (string)c[i].Sequel %>", "<%= (string)c[i].JudgeName %>", <%= c[i].TypeOfSuit %>,
+                "<%= (string)c[i].RelatedTo %>", "<%= (string)c[i].UnderSection %>", "<%= (string)c[i].PatentsAtIssue %>", "<%= (string)c[i].CaseSummary %>", "<%= (string)c[i].CourtInterpretation %>",
+            moment(<%= (long)c[i].DateOfJudgement%>).format("YYYY-MM-DD"), "<%= (string)c[i].CaseDecision %>", "<%= (string)c[i].FurtherAppeals %>", <%= (int)c[i].Status %>, "<%= (string)c[i].CaseInDetail %>", "<%= (string)c[i].FlowChart %>"]);
             
             <%}%>
 

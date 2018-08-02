@@ -1,4 +1,4 @@
-﻿var newRows = [], deletedRows = [], updatedRows = [], flags = [];
+﻿var newRows = {}, deletedRows = {}, updatedRows = {}, flags = [];
 
 function navDataSetHelper() {
     this.columnNames = [{
@@ -40,7 +40,7 @@ function navDataSetHelper() {
     }, {
         "name": "dateOfFiling",
         "label": "Date Of Filing",
-        "width": 100,
+        "width": 115,
         "columnType": {
             type: 'calendar'
         }
@@ -156,8 +156,8 @@ function navDataSetHelper() {
 }
 
 navDataSetHelper.prototype.dataSetHandler = function (event, that) {
-    var form = $(that);
-    //event.preventDefault();
+    var button = $(that);
+    event.preventDefault();
     /*form.validate({
      errorClass : "error help-block",
      rules : {
@@ -180,7 +180,7 @@ navDataSetHelper.prototype.dataSetHandler = function (event, that) {
     })*/
     $("#_nav_bird_eye_view_button").prop('disabled', true);
     var self = this;
-    this.saveDataSet(form)
+    this.saveDataSet(button)
         .then(function (response) {
             self.showSuccess(response.body.body.message);
             $("#_nav_bird_eye_view_success .alert-success").focus();
@@ -196,10 +196,34 @@ navDataSetHelper.prototype.dataSetHandler = function (event, that) {
     });
 }
 
-navDataSetHelper.prototype.saveDataSet = function (form) {
-    var body = form.serialize();
-    //console.log(body);
-    return navRequestHandler().doRequest(form.attr('action'), 'POST', body);
+navDataSetHelper.prototype.saveDataSet = function (button) {
+    var body = [];
+    var updateData = { "type": "update", "data" : [] },
+        newData = { "type": "new", "data": [] },
+        deleteData = { "type": "delete", "data": [] };
+    debugger;
+    formatRequest(newRows, newData);
+    formatRequest(updatedRows, updateData);
+    formatRequest(deletedRows, deleteData);
+    body.push(updateData);
+    body.push(newData);
+    body.push(deleteData);
+    return navRequestHandler().doRequest(button.prop("href"), 'POST', body);
+}
+
+function formatRequest(source, destination) {
+    for (var key in source) {
+        if (source.hasOwnProperty(key)) {
+            var temp = {};
+            temp["id"] = key;
+            for (var key1 in source[key]) {
+                if (source[key].hasOwnProperty(key1)) {
+                    temp[key1] = source[key][key1];
+                }
+            }
+            destination.data.push(temp);
+        }
+    }
 }
 
 navDataSetHelper.prototype.showError = function (message) {
@@ -229,14 +253,51 @@ navDataSetHelper.prototype.hideSuccess = function () {
 }
 
 navDataSetHelper.prototype.onInsertNewRow = function (obj, rowNumber) {
+    debugger;
+    var id = moment().valueOf() + "";
+    $($("#row-" + rowNumber).children()[1]).text(id);
+    newRows[id] = {};
 }
 
 navDataSetHelper.prototype.onDeleteRow = function (obj, rowNumber, numOfRows, records) {
-    
+    debugger;
+    //var id = $($("#row-" + rowNumber).children()[1]).text();
+    var id = records[rowNumber][0];
+
+    if(newRows[id]) {
+        newRows[id] = undefined;
+        delete newRows[id];
+    } else if(updatedRows[id]) {
+        updatedRows[id] = undefined;
+        delete updatedRows[id];
+        deletedRows[id] = {
+            "id" : id
+        };
+    } else {
+        deletedRows[id] = {
+            "id" : id
+        };
+    }
 }
 
 navDataSetHelper.prototype.onChangeRow = function (obj, cell, val) {
     debugger;
+    var id = $($(cell).parent().children()[1]).text();
+    var columnNumber = parseInt($(cell).prop("id").split("-")[0]);
+
+    if ((this.columnNames[columnNumber].name == "dateOfFiling") ||
+        (this.columnNames[columnNumber].name == "dateOfJudgement")) {
+        val = moment(val).valueOf();
+    }
+
+    if (newRows[id]) {
+        newRows[id][this.columnNames[columnNumber].name] = val;
+    } else {
+        if (!updatedRows[id]) {
+            updatedRows[id] = {};
+        }
+        updatedRows[id][this.columnNames[columnNumber].name] = val;
+    }
 }
 
 
@@ -261,9 +322,12 @@ function registerDataSetHandlers() {
         colHeaders: headers,
         colWidths: widths,
         columns: types,
-        oninsertrow : function(obj) { new navDataSetHelper().onInsertNewRow(obj, rowNumber);},
+        oninsertrow : function(obj, rowNumber) { new navDataSetHelper().onInsertNewRow(obj, rowNumber);},
         ondeleterow: function (obj, rowNumber, numOfRows, records) { debugger; new navDataSetHelper().onDeleteRow(obj, rowNumber, numOfRows, records); },
-        onchange: function (obj, cell, val) { new navDataSetHelper().onChangeRow(obj, cell, val); }
+        onchange: function (obj, cell, val) { new navDataSetHelper().onChangeRow(obj, cell, val); },
+        allowDeleteColumn: false,
+        allowInsertColumn: false,
+        allowManualInsertColumn : false
     });
     
     $('#_nav_bird_eye_view_div').jexcel('updateSettings', {

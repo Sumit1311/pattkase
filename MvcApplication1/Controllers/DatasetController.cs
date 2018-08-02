@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MvcApplication1.Models;
+using System.Data.Entity;
 
 namespace MvcApplication1.Controllers
 {
@@ -63,5 +64,51 @@ namespace MvcApplication1.Controllers
             ViewBag.Dataset = dataset;
             return View("BirdEyeView");
         }
+
+        [HttpPost]
+        public ActionResult BirdEyeView(List<InputDatasetRequest> dataset)
+        {
+            for (var i = 0; i < dataset.Count; i++)
+            {
+                var data = dataset[i].data;
+                if (dataset[i].type == "new" && data != null)
+                {
+                    for (var j = 0; j < data.Count; j++)
+                    {
+                        //user.CasePapers.Add(data[0]);
+                        user.CasePapers.Add(data[j].ConvertToDatabaseModel());
+                    }
+                }
+                if (dataset[i].type == "update" && data != null)
+                {
+                    for (var j = 0; j < data.Count; j++)
+                    {
+                        if (data[j].id != null)
+                        {
+                            var id = data[j].id;
+                            var updatedCase = user.CasePapers.FirstOrDefault(c => c.Id == id);
+                            if (updatedCase != null) { 
+                            data[j].ConvertToDatabaseModel(updatedCase);
+                            }
+                        }
+                    }
+                }
+                if (dataset[i].type == "delete" && data != null)
+                {
+                    for (var j = 0; j < data.Count; j++)
+                    {
+                        if (data[j].id != null)
+                        {
+                            var id = data[j].id;
+                            user.CasePapers.RemoveRange(user.CasePapers.Where(e => e.Id == id));
+                        }
+                    }
+                }
+            }
+            user.SaveChanges();
+            return SendRedirectResponse("/Dataset/BirdEyeView");
+        }
+
+
     }
 }

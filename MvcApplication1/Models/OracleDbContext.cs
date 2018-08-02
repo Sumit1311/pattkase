@@ -15,6 +15,211 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace MvcApplication1.Models
 {
+    public class InputDataset
+    {
+        public string id { get; set; }
+        public string caseNo { get; set; }
+        public string plaintiff { get; set; }
+        public string defendant { get; set; }
+        public int country { get; set; }
+        public int dateOfFiling { get; set; }
+        public int courtOfLaw { get; set; }
+        public string sequel { get; set; }
+        public string judgeName { get; set; }
+        public int typeOfSuit { get; set; }
+        public string relatedTo { get; set; }
+        public string underSection { get; set; }
+        public string patentsAtIssue { get; set; }
+        public string caseSummary { get; set; }
+        public string courtInterpretation { get; set; }
+        public int dateOfJudgement { get; set; }
+        public string caseDecision { get; set; }
+        public string furtherAppeals { get; set; }
+        public int status { get; set; }
+        public string caseInDetail { get; set; }
+        public string flowchart { get; set; }
+
+        public CasePaper ConvertToDatabaseModel()
+        {
+            CasePaper n = new CasePaper();
+            n.Id = Guid.NewGuid().ToString();
+            if (caseNo != null)
+            {
+                n.CaseNo = caseNo;
+            }
+            if(plaintiff != null)
+            {
+                n.Plaintiff = plaintiff;
+            }
+            if(defendant != null)
+            {
+                n.Defendant = defendant;
+            }
+            if (country != 0)
+            {
+                n.Country = country;
+            }
+            if (dateOfFiling != 0)
+            {
+                n.DateOfFiling = dateOfFiling;
+            }
+            if (courtOfLaw != 0)
+            {
+                n.CourtOfLaw = courtOfLaw;
+            }
+            if(sequel != null)
+            {
+                n.Sequel = sequel;
+            }
+            if(judgeName != null)
+            {
+                n.JudgeName = judgeName;
+            }
+            if (typeOfSuit != 0)
+            {
+                n.TypeOfSuit = typeOfSuit;
+            }
+            if (relatedTo != null)
+            {
+                n.RelatedTo = relatedTo;
+            }
+            if (underSection != null)
+            {
+                n.UnderSection = underSection;
+            }
+            if (patentsAtIssue != null)
+            {
+                n.PatentsAtIssue = patentsAtIssue;
+            }
+            if (caseSummary != null)
+            {
+                n.CaseSummary = caseSummary;
+            }
+            if (courtInterpretation != null)
+            {
+                n.CourtInterpretation = courtInterpretation;
+            }
+            if (dateOfJudgement != 0)
+            {
+                n.DateOfJudgement = dateOfJudgement;
+            }
+            if (caseDecision != null)
+            {
+                n.CaseDecision = caseDecision;
+            }
+            if(furtherAppeals != null)
+            {
+                n.FurtherAppeals = furtherAppeals;
+
+            }
+            if(status != 0)
+            {
+                n.Status = status;
+            }
+            if(caseInDetail != null)
+            {
+                n.CaseInDetail = caseInDetail;
+            }
+            if (flowchart != null)
+            {
+                n.FlowChart = flowchart;
+            }
+            return n;
+        }
+
+        public void ConvertToDatabaseModel(CasePaper n)
+        {
+            if (caseNo != null)
+            {
+                n.CaseNo = caseNo;
+            }
+            if(plaintiff != null)
+            {
+                n.Plaintiff = plaintiff;
+            }
+            if(defendant != null)
+            {
+                n.Defendant = defendant;
+            }
+            if (country != 0)
+            {
+                n.Country = country;
+            }
+            if (dateOfFiling != 0)
+            {
+                n.DateOfFiling = dateOfFiling;
+            }
+            if (courtOfLaw != 0)
+            {
+                n.CourtOfLaw = courtOfLaw;
+            }
+            if(sequel != null)
+            {
+                n.Sequel = sequel;
+            }
+            if(judgeName != null)
+            {
+                n.JudgeName = judgeName;
+            }
+            if (typeOfSuit != 0)
+            {
+                n.TypeOfSuit = typeOfSuit;
+            }
+            if (relatedTo != null)
+            {
+                n.RelatedTo = relatedTo;
+            }
+            if (underSection != null)
+            {
+                n.UnderSection = underSection;
+            }
+            if (patentsAtIssue != null)
+            {
+                n.PatentsAtIssue = patentsAtIssue;
+            }
+            if (caseSummary != null)
+            {
+                n.CaseSummary = caseSummary;
+            }
+            if (courtInterpretation != null)
+            {
+                n.CourtInterpretation = courtInterpretation;
+            }
+            if (dateOfJudgement != 0)
+            {
+                n.DateOfJudgement = dateOfJudgement;
+            }
+            if (caseDecision != null)
+            {
+                n.CaseDecision = caseDecision;
+            }
+            if(furtherAppeals != null)
+            {
+                n.FurtherAppeals = furtherAppeals;
+
+            }
+            if(status != 0)
+            {
+                n.Status = status;
+            }
+            if(caseInDetail != null)
+            {
+                n.CaseInDetail = caseInDetail;
+            }
+            if (flowchart != null)
+            {
+                n.FlowChart = flowchart;
+            }
+        }
+    }
+    public class InputDatasetRequest
+    {
+        public string type { get; set; }
+
+        public IList<InputDataset> data { get; set; }
+    }
+
+
     public class AppLogin : IdentityUserLogin { }
 
     public class AppRole : IdentityUserRole { }
