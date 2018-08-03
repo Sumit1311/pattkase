@@ -6,7 +6,7 @@
     <form id="_nav_search_form" action="/Dataset/Search" method="POST">
         <div class="form-row">
         <div class="form-group col-md-8">
-    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Case Search">
+    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Case Search" name="caseSearch">
   </div>
         <div class="col-md-2">
             <a href="/Dataset/SearchHistory" class="btn">Search History</a>

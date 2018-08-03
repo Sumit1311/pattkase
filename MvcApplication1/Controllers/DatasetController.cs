@@ -135,10 +135,11 @@ namespace MvcApplication1.Controllers
                     if(fc[f.name] != null || fc[f.name] != "" || fc[f.name] != "0")
                     {
                         f.value = fc[f.name];
-                        list.Add(f);
                     }
+                    
                 }
             }
+            var cases = user.CasePapers.SqlQuery("SELECT * FROM hr.\"CasePapers\"").ToList();
             return View("SearchResults");
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
@@ -297,6 +298,7 @@ namespace MvcApplication1.Models
 
     public class CasePaper
     {
+        public CasePaper() { }
         public static  string[] Countries = 
         {
           "India",
@@ -534,7 +536,7 @@ namespace MvcApplication1.Models
                 if(c != null) { 
                 for (var i = 0; i < c.Length; i++)
                 {
-                    element += "< option value = \"" + (i + 1) + "\" >" + c[i] + "</ option >";
+                    element += "<option value=\"" + (i + 1) + "\">" + c[i] + "</option>";
                 }
                 }
                 element += "</select>";
@@ -548,7 +550,113 @@ namespace MvcApplication1.Models
             }
             return element;
         }
-    }
+
+        public string getSqlQuery(List<SearchField> fields, FormCollection fc)
+        {
+            string selectClause = "SELECT ";
+            string fromClause = "FROM hr.\"CasePapers\"";
+            string whereClause = "WHERE ";
+            List<object> parameters = new List<object>();
+            for (var i = 0; i < fields.Count; i++)
+            {
+                InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName);
+                if (fc[f.name] != null || fc[f.name] != "" || fc[f.name] != "0")
+               
+                    if (f.name == "caseNo")
+                    {
+                        var columnName ="CaseNo";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "plaintiff" ){
+                        var columnName ="Plaintiff";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "defendant" ){
+                        var columnName ="Defendant";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "dateOfFiling") {
+                        var columnName = "DateOfFiling";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "courtOfLaw"){
+                        var columnName = "CourtOfLaw";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(Convert.ToInt32(fc[f.name]));
+                    } else if(f.name == "sequel"){
+                        var columnName = "Sequel";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "judgeName") {
+                        var columnName = "JudgeName";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "typeOfSuit") {
+                        var columnName = "TypeOfSuit";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "relatedTo"){
+                        var columnName = "RelatedTo";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "underSection"){
+                        var columnName = "UnderSection";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "patentsAtIssue"){
+                        var columnName = "PatentsAtIssue";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "courtInterpretation"){
+                        var columnName = "CourtInterpretation";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "dateOfJudgement"){
+                        var columnName = "DateOfJudgement";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "caseDecision"){
+                        var columnName = "Casedecision";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    } else if(f.name == "furtherAppeals"){
+                        var columnName = "FutherAppeals";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    }
+                    else if(f.name == "status"){
+                        var columnName = "Status";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(Convert.ToInt32(fc[f.name]));
+                    }
+                    else if(f.name == "country"){
+                        var columnName = "Country";
+                        selectClause += (parameters.Count == 0 ? "" : "," )+" \" "+columnName+"\"";
+                        whereClause += "\""+columnName+"\" = {" + parameters.Count + "}";
+                        parameters.Add(fc[f.name]);
+                    }
+                    //Key1 and key2
+                }
+                return "";
+            }
+        }
+    
     public class ApplicationDbContext : IdentityDbContext<Login>
     {
         //public DbSet<Login> Logins { get; set; }
