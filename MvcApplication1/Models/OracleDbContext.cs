@@ -23,7 +23,7 @@ namespace MvcApplication1.Models
         public string plaintiff { get; set; }
         public string defendant { get; set; }
         public int country { get; set; }
-        public int dateOfFiling { get; set; }
+        public Int64 dateOfFiling { get; set; }
         public int courtOfLaw { get; set; }
         public string sequel { get; set; }
         public string judgeName { get; set; }
@@ -33,7 +33,7 @@ namespace MvcApplication1.Models
         public string patentsAtIssue { get; set; }
         public string caseSummary { get; set; }
         public string courtInterpretation { get; set; }
-        public int dateOfJudgement { get; set; }
+        public Int64 dateOfJudgement { get; set; }
         public string caseDecision { get; set; }
         public string furtherAppeals { get; set; }
         public int status { get; set; }
@@ -383,14 +383,17 @@ namespace MvcApplication1.Models
             "Keyword 1",
             "Keyword 2",
             "Country"
-
         };
         [Key]
         public string Id { get; set; }
         [StringLength(255, ErrorMessage = "My Error Message")]
         public string FieldName { get; set; }
         public bool Show { get; set; }
+
+       
     }
+
+    
 
     public class InputSearchField
     {
@@ -402,7 +405,7 @@ namespace MvcApplication1.Models
 
     public class InputSearchFields
     {
-        public static InputSearchField getInputSearchField(string field)
+        public static InputSearchField getInputSearchField(string field, CasePaper c)
         {
             InputSearchField f = new InputSearchField( );
             switch(field)
@@ -412,99 +415,171 @@ namespace MvcApplication1.Models
                     f.fieldType = "text";
                     f.label = "Plaintiff";
                     f.name = "plaintiff";
+                    if(c != null)
+                    {
+                        f.value = c.Plaintiff;
+                    }
                     break;
                 case "Defendant":
                     f.fieldType = "text";
                     f.label = "Defendant";
                     f.name = "defendant";
+                    if (c != null)
+                    {
+                        f.value = c.Defendant;
+                    }
                     break;
                 case "Date Of Filing":
                     f.fieldType = "date";
                     f.label = "Date Of Filing";
                     f.name = "dateOfFiling";
+                    if (c != null)
+                    {
+                        f.value = c.DateOfFiling.ToString();
+                    }
                     break;
 
                 case "Court Of Law":
                     f.fieldType = "dropdown";
                     f.label = "Court Of Law";
                     f.name = "courtOfLaw";
+                    if (c != null)
+                    {
+                        f.value = CasePaper.Courts[c.Country - 1];
+                    }
                     break;
                 case "Sequel":
                     f.fieldType = "text";
                     f.label = "Sequel";
                     f.name = "sequel";
+                    if (c != null)
+                    {
+                        f.value = c.Sequel;
+                    }
                     break;
                 case "Judge Name":
                     f.fieldType = "text";
                     f.label = "Judge Name";
                     f.name = "judgeName";
+                    if (c != null)
+                    {
+                        f.value = c.JudgeName;
+                    }
                     break;
                 case "Type Of Suit":
                     f.fieldType = "dropdown";
                     f.label = "Type Of Suit";
                     f.name = "typeOfSuit";
+                    if (c != null)
+                    {
+                        f.value = CasePaper.Suits[c.TypeOfSuit - 1];
+                    }
                     break;
                 case "Related To":
                     f.fieldType = "text";
                     f.label = "Related To";
                     f.name = "relatedTo";
+                    if (c != null)
+                    {
+                        f.value = c.RelatedTo;
+                    }
                     break;
                 case "Under Section":
                     f.fieldType = "text";
                     f.label = "Under Section";
                     f.name = "underSection";
+                    if (c != null)
+                    {
+                        f.value = c.UnderSection;
+                    }
                     break;
                 case "Patents At Issue":
                     f.fieldType = "text";
                     f.label = "Patents At Issue";
                     f.name = "patentsAtIssue";
+                    if (c != null)
+                    {
+                        f.value = c.PatentsAtIssue;
+                    }
                     break;
                 case "Court Interpretation":
                     f.fieldType = "text";
                     f.label = "Court Interpretation";
                     f.name = "courtInterpretation";
+                    if (c != null)
+                    {
+                        f.value = c.CourtInterpretation;
+                    }
                     break;
                 case "Date Of Judgement":
                     f.fieldType = "date";
                     f.label = "Date Of Judgement";
                     f.name = "dateOfJudgement";
+                    if (c != null)
+                    {
+                        f.value = c.DateOfJudgement.ToString();
+                    }
                     break;
-                case "Case Decision":
+/*                case "Case Decision":
                     f.fieldType = "text";
                     f.label = "Case Decision";
                     f.name = "caseDecision";
-                    break;
+                    if (c != null)
+                    {
+                        f.value = c.CaseDecision;
+                    }
+                    break;*/
                 case "Further Appeals":
                     f.fieldType = "text";
                     f.label = "Further Appeals";
                     f.name = "futherAppeals";
+                    if (c != null)
+                    {
+                        f.value = c.FurtherAppeals;
+                    }
                     break;
                 case "Status":
                     f.fieldType = "dropdown";
                     f.label = "Status";
                     f.name = "status";
+                    if (c != null)
+                    {
+                        f.value = CasePaper.Statuses[c.Status - 1];
+                    }
                     break;
                    case "Keyword 1":
                     f.fieldType = "text";
                     f.label = "Keyword 1";
                     f.name = "key1";
+                    if (c != null)
+                    {
+                        f.value = c.CaseSummary;
+                    }
                     break;
                 case "Keyword 2":
                     f.fieldType = "text";
                     f.label = "Keyword 2";
                     f.name = "key2";
+                    if (c != null)
+                    {
+                        f.value = c.CaseDecision;
+                    }
                     break;
                 case "Country":
                     f.fieldType = "dropdown";
                     f.label = "Country";
                     f.name = "country";
+                    if (c != null)
+                    {
+                        f.value = CasePaper.Countries[c.Country - 1];
+                    }
                     break;
             }
             return f;
         }
         public static string getInputElement(string field)
         {
-            InputSearchField f = InputSearchFields.getInputSearchField(field);
+            InputSearchField f = InputSearchFields.getInputSearchField(field, null);
             string element;
             if(f.fieldType == "text")
             {
@@ -551,7 +626,7 @@ namespace MvcApplication1.Models
             return element;
         }
 
-        public static SqlQuery getSqlQuery(List<SearchField> fields, FormCollection fc)
+        public static SqlQuery getSqlQuery(List<InputSearchField> fields)
         {
             string selectClause = "SELECT * ";
             string fromClause = "FROM hr.\"CasePapers\"";
@@ -559,121 +634,153 @@ namespace MvcApplication1.Models
             List<object> parameters = new List<object>();
             for (var i = 0; i < fields.Count; i++)
             {
-                InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName);
-                if (fc[f.name] != null || fc[f.name] != "" || fc[f.name] != "0")
-               
+                InputSearchField f = fields[i];
+                //InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null);
+                if (f.value != null && f.value != "" && f.value != "0")
+                {
                     if (f.name == "caseNo")
                     {
-                        var columnName ="CaseNo";
+                        var columnName = "CaseNo";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "plaintiff" ){
-                        var columnName ="Plaintiff";
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "plaintiff")
+                    {
+                        var columnName = "Plaintiff";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "defendant" ){
-                        var columnName ="Defendant";
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "defendant")
+                    {
+                        var columnName = "Defendant";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \"" +columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "dateOfFiling") {
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "dateOfFiling")
+                    {
                         var columnName = "DateOfFiling";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(fc[f.name]));
-                    } else if(f.name == "courtOfLaw"){
+                        parameters.Add(Convert.ToInt64(f.value));
+                    }
+                    else if (f.name == "courtOfLaw")
+                    {
                         var columnName = "CourtOfLaw";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(fc[f.name]));
-                    } else if(f.name == "sequel"){
+                        parameters.Add(Convert.ToInt32(f.value));
+                    }
+                    else if (f.name == "sequel")
+                    {
                         var columnName = "Sequel";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "judgeName") {
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "judgeName")
+                    {
                         var columnName = "JudgeName";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "typeOfSuit") {
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + " || '%'";
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "typeOfSuit")
+                    {
                         var columnName = "TypeOfSuit";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(fc[f.name]));
-                    } else if(f.name == "relatedTo"){
+                        parameters.Add(Convert.ToInt32(f.value));
+                    }
+                    else if (f.name == "relatedTo")
+                    {
                         var columnName = "RelatedTo";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "underSection"){
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "underSection")
+                    {
                         var columnName = "UnderSection";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "patentsAtIssue"){
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "patentsAtIssue")
+                    {
                         var columnName = "PatentsAtIssue";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "courtInterpretation"){
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "courtInterpretation")
+                    {
                         var columnName = "CourtInterpretation";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "dateOfJudgement"){
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "dateOfJudgement")
+                    {
                         var columnName = "DateOfJudgement";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(fc[f.name]));
-                    } else if(f.name == "caseDecision"){
+                        parameters.Add(Convert.ToInt64(f.value));
+                    }
+                    else if (f.name == "caseDecision")
+                    {
                         var columnName = "Casedecision";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
-                    } else if(f.name == "furtherAppeals"){
+                        parameters.Add(f.value.ToUpper());
+                    }
+                    else if (f.name == "furtherAppeals")
+                    {
                         var columnName = "FutherAppeals";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
-                        parameters.Add(fc[f.name].ToUpper());
+                        parameters.Add(f.value.ToUpper());
                     }
-                    else if(f.name == "status"){
+                    else if (f.name == "status")
+                    {
                         var columnName = "Status";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(fc[f.name]));
+                        parameters.Add(Convert.ToInt32(f.value));
                     }
-                    else if(f.name == "country"){
+                    else if (f.name == "country")
+                    {
                         var columnName = "Country";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(fc[f.name]));
+                        parameters.Add(Convert.ToInt32(f.value));
                     }
                     else if (f.name == "key1")
                     {
                         var columnName = "CaseSummary";
                         //selectClause += (parameters.Count == 0 ? "" : ",") + " \"" + columnName + "\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + "% ";
-                        parameters.Add(fc[f.name].ToUpper());
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + " + '%' ";
+                        parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "key2")
                     {
                         var columnName = "CaseDecision";
                         //selectClause += (parameters.Count == 0 ? "" : ",") + " \"" + columnName + "\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + "% ";
-                        parameters.Add(fc[f.name].ToUpper());
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + "+ '%' ";
+                        parameters.Add(f.value.ToUpper());
                     }
-                    else if(f.name == "caseSearch")
+                    else if (f.name == "caseSearch")
                     {
                         var columnName = "CaseInDetail";
                         //selectClause += (parameters.Count == 0 ? "" : ",") + " \"" + columnName + "\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + "% ";
-                        parameters.Add(fc[f.name].ToUpper());
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + " + '%' ";
+                        parameters.Add(f.value.ToUpper());
                     }
                     //Key1 and key2
                 }
+            }
             var query = selectClause + " " + fromClause + " " + whereClause;
                 return new SqlQuery(query, parameters);
         }

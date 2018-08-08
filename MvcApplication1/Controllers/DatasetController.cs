@@ -127,23 +127,36 @@ namespace MvcApplication1.Controllers
             else if(searchStyle == "fielded")
             {
                 var fields = user.SearchFields.Where(f => f.Show == true).ToList();
-                List<InputSearchField> list = new List<InputSearchField>();
+                List<InputSearchField> inputList = new List<InputSearchField>();
                 var i = 0;
                 for (i = 0; i < fields.Count;i++ )
                 {
-                    InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName);
+                    InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null);
                     if(fc[f.name] != null || fc[f.name] != "" || fc[f.name] != "0")
                     {
                         f.value = fc[f.name];
+                        inputList.Add(f);
                     }
                     
                 }
-                SqlQuery q = InputSearchFields.getSqlQuery(fields, fc);
+                SqlQuery q = InputSearchFields.getSqlQuery(inputList);
                 var cases = user.CasePapers.SqlQuery(q.queryString, q.parameters.ToArray()).ToList();
-                ViewBag.caseResults = cases;
+                List<List<InputSearchField> > casesList = new List<List<InputSearchField> >();
+                for(i = 0; i < cases.Count; i++)
+                {
+                    List<InputSearchField> t = new List<InputSearchField>();
+                    for (var j = 0; j < fields.Count; j++)
+                    {
+                        InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i]);
+                        t.Add(f);
+                    }
+                    casesList.Add(t);
+                }
+                ViewBag.caseResults = casesList;
+                return View("SearchResults");
             }
-            
-            return View("SearchResults");
+
+            return View();
         }
     }
 }

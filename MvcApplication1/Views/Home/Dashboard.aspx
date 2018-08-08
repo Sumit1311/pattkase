@@ -65,7 +65,7 @@
                                     <div class="form-row form-group">      
                                 
                                         <div class="col-md-2">
-                                            <select name="operator_<%= InputSearchFields.getInputSearchField(fields[i].FieldName).name%>" class="custom-select">
+                                            <select name="operator_<%= InputSearchFields.getInputSearchField(fields[i].FieldName, null).name%>" class="custom-select">
                           <option value="1">And (^)</option>
                           <option value="2">Or (v)</option>
                           <option value="3">Not (~)</option>
