@@ -66,7 +66,6 @@
                                 
                                         <div class="col-md-2">
                                             <select name="operator_<%= InputSearchFields.getInputSearchField(fields[i].FieldName).name%>" class="custom-select">
-                          <option value="0" selected>Select Operator</option>
                           <option value="1">And (^)</option>
                           <option value="2">Or (v)</option>
                           <option value="3">Not (~)</option>
@@ -79,7 +78,7 @@
                             {%>
                                         <div class="col-md-2">
                                             <select class="custom-select">
-                          <option value="0" selected>Select Operator</option>
+                          
                           <option value="1">And (^)</option>
                           <option value="2">Or (v)</option>
                           <option value="3">Not (~)</option>
