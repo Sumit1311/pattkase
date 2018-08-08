@@ -138,8 +138,11 @@ namespace MvcApplication1.Controllers
                     }
                     
                 }
+                SqlQuery q = InputSearchFields.getSqlQuery(fields, fc);
+                var cases = user.CasePapers.SqlQuery(q.queryString, q.parameters.ToArray()).ToList();
+                ViewBag.caseResults = cases;
             }
-            var cases = user.CasePapers.SqlQuery("SELECT * FROM hr.\"CasePapers\"").ToList();
+            
             return View("SearchResults");
         }
     }
