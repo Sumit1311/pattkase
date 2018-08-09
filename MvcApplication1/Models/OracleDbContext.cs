@@ -40,6 +40,30 @@ namespace MvcApplication1.Models
         public string caseInDetail { get; set; }
         public string flowchart { get; set; }
 
+        public InputDataset() : base() { }
+
+        public InputDataset(FormCollection fc)
+        {
+            plaintiff = fc["plaintiff"];
+        defendant = fc["defendant"];
+         country = Convert.ToInt32(fc["country"]);
+         dateOfFiling = Convert.ToInt64(fc["dateOfFiling"]);
+         courtOfLaw = Convert.ToInt32(fc["courtOfLaw"]);
+        sequel = fc["sequel"];
+        judgeName = fc["judgeName"];
+         typeOfSuit = Convert.ToInt32(fc["typeOfSuit"]);
+        relatedTo = fc["relatedTo"];
+        underSection = fc["underSection"];
+        patentsAtIssue = fc["patentsAtIssue"];
+        caseSummary = fc["caseSummary"] != null ? fc["caseSummary"].Replace("\r\n", " ") : fc["caseSummary"];
+        courtInterpretation = fc["courtInterpretation"] != null ? fc["courtInterpretation"].Replace("\r\n", " ") : fc["courtInterpretation"];
+        dateOfJudgement = Convert.ToInt64(fc["dateOfJudgement"]);
+        caseDecision = fc["caseDecision"] != null ? fc["caseDecision"].Replace("\r\n", " ") : fc["caseDecision"];
+        furtherAppeals = fc["furtherAppeals"];
+        status = Convert.ToInt32(fc["status"]);
+        caseInDetail = fc["caseInDetail"] != null ? fc["caseInDetail"].Replace("\r\n", " ") : fc["caseInDetail"];
+        }
+
         public CasePaper ConvertToDatabaseModel()
         {
             CasePaper n = new CasePaper();
@@ -128,7 +152,7 @@ namespace MvcApplication1.Models
             return n;
         }
 
-        public void ConvertToDatabaseModel(CasePaper n)
+        public void ConvertToDatabaseModel(ref CasePaper n)
         {
             if (caseNo != null)
             {
@@ -532,6 +556,16 @@ namespace MvcApplication1.Models
                     f.element = getElementFromType(f);
                     break;
                 case "CourtInterpretation":
+                    f.fieldType = "textarea";
+                    f.label = "Court Interpretation";
+                    f.name = "courtInterpretation";
+                    f.isReadOnly = isReadOnly;
+                    if (c != null)
+                    {
+                        f.value = c.CourtInterpretation;
+                    }
+                    f.element = getElementFromType(f);
+                    break;
                 case "Court Interpretation":
                     f.fieldType = "text";
                     f.label = "Court Interpretation";
@@ -707,7 +741,7 @@ namespace MvcApplication1.Models
                 {
                     for (var i = 0; i < c.Length; i++)
                     {
-                        element += "<option "+ ((f.value != "" && Convert.ToInt32(f.value) == (i+1)) ? "selected" : "")+ "value=\"" + (i + 1) + "\">" + c[i] + "</option>";
+                        element += "<option "+ ((f.value != "" && Convert.ToInt32(f.value) == (i+1)) ? "selected " : "")+ "value=\"" + (i + 1) + "\">" + c[i] + "</option>";
                     }
                 }
                 element += "</select>";
@@ -719,7 +753,7 @@ namespace MvcApplication1.Models
             }
             else if (f.fieldType == "textarea")
             {
-                element = "<textarea " + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : "class=\"form-control\"") + " name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\" value=\"" + f.value + "\"> </textarea>";
+                element = "<textarea " + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : "class=\"form-control\"") + " name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\">"+f.value+" </textarea>";
             }
             else
             {

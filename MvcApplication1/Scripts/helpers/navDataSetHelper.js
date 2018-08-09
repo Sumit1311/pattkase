@@ -212,6 +212,7 @@ navDataSetHelper.prototype.saveDataSet = function (button) {
     body.push(updateData);
     body.push(newData);
     body.push(deleteData);
+    debugger;
     return navRequestHandler().doRequest(button.prop("href"), 'POST', body);
 }
 

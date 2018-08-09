@@ -221,6 +221,7 @@
     <Content Include="Scripts\helpers\navDataSetHelper.js" />
     <Content Include="Scripts\helpers\navLogInHelper.js" />
     <Content Include="Scripts\helpers\navModifySearchFieldsHelper.js" />
+    <Content Include="Scripts\helpers\navCaseView.js" />
     <Content Include="Scripts\helpers\navRegistrationHelper.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\q-1.1.0.js" />

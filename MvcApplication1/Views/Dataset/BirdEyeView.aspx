@@ -93,7 +93,7 @@
             data.push(["<%= (string)c[i].Id %>","<%= (string)c[i].CaseNo %>", "<%= (string)c[i].Plaintiff %>", "<%= (string)c[i].Defendant %>",<%= (int)c[i].Country %>,
                 moment(<%= (long)c[i].DateOfFiling %>).format("YYYY-MM-DD"), <%= (int)(c[i].CourtOfLaw) %>, "<%= (string)c[i].Sequel %>", "<%= (string)c[i].JudgeName %>", <%= c[i].TypeOfSuit %>,
                 "<%= (string)c[i].RelatedTo %>", "<%= (string)c[i].UnderSection %>", "<%= (string)c[i].PatentsAtIssue %>", "<%= (string)c[i].CaseSummary %>", "<%= (string)c[i].CourtInterpretation %>",
-            moment(<%= (long)c[i].DateOfJudgement%>).format("YYYY-MM-DD"), "<%= (string)c[i].CaseDecision %>", "<%= (string)c[i].FurtherAppeals %>", <%= (int)c[i].Status %>, "<%= (string)c[i].CaseInDetail %>", "<%= (string)c[i].FlowChart %>"]);
+            moment(<%= (long)c[i].DateOfJudgement%>).format("YYYY-MM-DD"), "<%= c[i].CaseDecision == null ? (string)c[i].CaseDecision : (string)c[i].CaseDecision.Replace("\r\n", "<br>") %>", "<%= (string)c[i].FurtherAppeals %>", <%= (int)c[i].Status %>, "<%= (string)c[i].CaseInDetail %>", "<%= (string)c[i].FlowChart %>"]);
             
             <%}%>
 

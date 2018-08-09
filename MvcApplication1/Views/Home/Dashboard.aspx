@@ -48,11 +48,12 @@
                 <h6 class="card-title">Fielded Search Criteria</h6>
                 <% var fields = this.ViewBag.searchFields; %>
                 <% for (int i = 0; i < fields.Count; i++) {
+                        InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false); 
                         if(i == 0)
                         {%>
                            <div class="form-row form-group">
                                                 <div class="col-md-4">
-                            <%= InputSearchFields.getInputElement(fields[i].FieldName) %>
+                            <%= f.element %>
                             </div>
                                </div>
                 <%
@@ -65,14 +66,14 @@
                                     <div class="form-row form-group">      
                                 
                                         <div class="col-md-2">
-                                            <select name="operator_<%= InputSearchFields.getInputSearchField(fields[i].FieldName, null, false).name%>" class="custom-select">
+                                            <select name="operator_<%= f.name%>" class="custom-select">
                           <option value="1">And (^)</option>
                           <option value="2">Or (v)</option>
                           <option value="3">Not (~)</option>
                         </select>
                                          </div>
                                          <div class="col-md-4">
-                            <%= InputSearchFields.getInputElement(fields[i].FieldName) %>
+                            <%= f.element %>
                             </div>
                             <%} else
                             {%>
@@ -85,7 +86,7 @@
                         </select>
                                          </div>
                                          <div class="col-md-4">
-                            <%= InputSearchFields.getInputElement(fields[i].FieldName) %>
+                            <%= f.element %>
                             </div>
                             <%}
                                     }

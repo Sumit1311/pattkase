@@ -94,6 +94,7 @@ var Q;
     <script src="/Scripts/helpers/navLogInHelper.js"></script>
     <script src="/Scripts/helpers/navRegistrationHelper.js"></script>
     <script src="/Scripts/helpers/navModifySearchFieldsHelper.js"></script>
+    <script src="/Scripts/helpers/navCaseView.js"></script>
 
 
     <asp:ContentPlaceHolder ID="ScriptSection" runat="server"></asp:ContentPlaceHolder>

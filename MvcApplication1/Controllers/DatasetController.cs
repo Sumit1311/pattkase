@@ -88,7 +88,7 @@ namespace MvcApplication1.Controllers
                             var id = data[j].id;
                             var updatedCase = user.CasePapers.FirstOrDefault(c => c.Id == id);
                             if (updatedCase != null) { 
-                            data[j].ConvertToDatabaseModel(updatedCase);
+                            data[j].ConvertToDatabaseModel(ref updatedCase);
                             }
                         }
                     }
@@ -164,13 +164,32 @@ namespace MvcApplication1.Controllers
         {
             var CaseNumber = Request.QueryString["caseNo"];
             CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
+            
             if (c != null)
             {
-                ViewBag.caseDetail = c;
+                
+                ViewBag.caseDetail=c;
                 return View("ViewCaseInfo");
             }
             Response.StatusCode = 500;
             return SendErrorResponse("Internal Server Error", "Unknown Error Occured");
+        }
+
+        [HttpPost]
+        public ActionResult CaseInfo(FormCollection fc)
+        {
+            var CaseNumber = Request.QueryString["caseNo"];
+            CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
+            if (c != null) { 
+                InputDataset i = new InputDataset(fc);
+                i.ConvertToDatabaseModel(ref c);
+                user.SaveChanges();
+            }
+            
+            return SendAjaxResponse("ok", new 
+            {
+                message = "Case Edited Successfully."
+            });
         }
     }
 }
