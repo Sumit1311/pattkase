@@ -401,11 +401,13 @@ namespace MvcApplication1.Models
         public string label { get; set; }
         public string name { get; set; }
         public string value { get; set; }
+        public string element { get; set; }
+        public bool isReadOnly { get; set; }
     }
 
     public class InputSearchFields
     {
-        public static InputSearchField getInputSearchField(string field, CasePaper c)
+        public static InputSearchField getInputSearchField(string field, CasePaper c, bool isReadOnly)
         {
             InputSearchField f = new InputSearchField( );
             switch(field)
@@ -415,110 +417,143 @@ namespace MvcApplication1.Models
                     f.fieldType = "text";
                     f.label = "Plaintiff";
                     f.name = "plaintiff";
+                    f.isReadOnly = isReadOnly;
                     if(c != null)
                     {
                         f.value = c.Plaintiff;
                     }
+                    f.element = getElementFromType(f);
                     break;
                 case "Defendant":
                     f.fieldType = "text";
                     f.label = "Defendant";
                     f.name = "defendant";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.Defendant;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "DateOfFiling":
                 case "Date Of Filing":
                     f.fieldType = "date";
                     f.label = "Date Of Filing";
                     f.name = "dateOfFiling";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.DateOfFiling.ToString();
                     }
-                    break;
 
+                    f.element = getElementFromType(f);
+                    break;
+                case "CourtOfLaw":
                 case "Court Of Law":
                     f.fieldType = "dropdown";
                     f.label = "Court Of Law";
                     f.name = "courtOfLaw";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
-                        f.value = CasePaper.Courts[c.Country - 1];
+                        f.value = c.Country.ToString();
                     }
+                    f.element = getElementFromType(f);
                     break;
                 case "Sequel":
                     f.fieldType = "text";
                     f.label = "Sequel";
                     f.name = "sequel";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.Sequel;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "JudgeName":
                 case "Judge Name":
                     f.fieldType = "text";
                     f.label = "Judge Name";
                     f.name = "judgeName";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.JudgeName;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "TypeOfSuit":
                 case "Type Of Suit":
                     f.fieldType = "dropdown";
                     f.label = "Type Of Suit";
                     f.name = "typeOfSuit";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
-                        f.value = CasePaper.Suits[c.TypeOfSuit - 1];
+                        f.value = c.TypeOfSuit.ToString();
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "RelatedTo":
                 case "Related To":
                     f.fieldType = "text";
                     f.label = "Related To";
                     f.name = "relatedTo";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.RelatedTo;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "UnderSection":
                 case "Under Section":
                     f.fieldType = "text";
                     f.label = "Under Section";
                     f.name = "underSection";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.UnderSection;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "PatentsAtIssue":
                 case "Patents At Issue":
                     f.fieldType = "text";
                     f.label = "Patents At Issue";
                     f.name = "patentsAtIssue";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.PatentsAtIssue;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "CourtInterpretation":
                 case "Court Interpretation":
                     f.fieldType = "text";
                     f.label = "Court Interpretation";
                     f.name = "courtInterpretation";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.CourtInterpretation;
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "DateOfJudgement":
                 case "Date Of Judgement":
                     f.fieldType = "date";
                     f.label = "Date Of Judgement";
                     f.name = "dateOfJudgement";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.DateOfJudgement.ToString();
                     }
+                    f.element = getElementFromType(f);
                     break;
 /*                case "Case Decision":
                     f.fieldType = "text";
@@ -529,97 +564,164 @@ namespace MvcApplication1.Models
                         f.value = c.CaseDecision;
                     }
                     break;*/
+                case "FurtherAppeals":
                 case "Further Appeals":
                     f.fieldType = "text";
                     f.label = "Further Appeals";
                     f.name = "futherAppeals";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.FurtherAppeals;
                     }
+
+                    f.element = getElementFromType(f);
                     break;
                 case "Status":
                     f.fieldType = "dropdown";
                     f.label = "Status";
                     f.name = "status";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
-                        f.value = CasePaper.Statuses[c.Status - 1];
+                        f.value = c.Status.ToString();
                     }
+                    f.element = getElementFromType(f);
                     break;
-                   case "Keyword 1":
-                    f.fieldType = "text";
-                    f.label = "Keyword 1";
-                    f.name = "key1";
+                case "CaseSummary":
+                    f.fieldType = "textarea";
+                    f.label = "Case Summary";
+                    f.name = "caseSummary";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.CaseSummary;
                     }
+                    f.element = getElementFromType(f);
+                    break;
+                case "Keyword 1":
+                    f.fieldType = "text";
+                    f.label = "Keyword 1";
+                    f.name = "key1";
+                    f.isReadOnly = isReadOnly;
+                    if (c != null)
+                    {
+                        f.value = c.CaseSummary;
+                    }
+                    f.element = getElementFromType(f);
+                    break;
+                case "CaseDecision":
+                    f.fieldType = "textarea";
+                    f.label = "Case Decision";
+                    f.name = "caseDecision";
+                    f.isReadOnly = isReadOnly;
+                    if (c != null)
+                    {
+                        f.value = c.CaseDecision;
+                    }
+
+                    f.element = getElementFromType(f);
                     break;
                 case "Keyword 2":
                     f.fieldType = "text";
                     f.label = "Keyword 2";
                     f.name = "key2";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
                         f.value = c.CaseDecision;
                     }
+
+                    f.element = getElementFromType(f);
                     break;
                 case "Country":
                     f.fieldType = "dropdown";
                     f.label = "Country";
                     f.name = "country";
+                    f.isReadOnly = isReadOnly;
                     if (c != null)
                     {
-                        f.value = CasePaper.Countries[c.Country - 1];
+                        f.value = c.Country.ToString();
                     }
+                    f.element = getElementFromType(f);
                     break;
+                case "CaseInDetail":
+                    f.fieldType = "textarea";
+                    f.label = "Case In Detail";
+                    f.name = "caseInDetail";
+                    f.isReadOnly = isReadOnly;
+                    if (c != null)
+                    {
+                        f.value = c.CaseInDetail;
+                    }
+
+                    f.element = getElementFromType(f);
+                    break;
+                
             }
             return f;
         }
         public static string getInputElement(string field)
         {
-            InputSearchField f = InputSearchFields.getInputSearchField(field, null);
-            string element;
-            if(f.fieldType == "text")
-            {
-                element = "<input type=\"text\" class=\"form-control\" name=\""+f.name+"\" id=\"_nav_search_field_"+f.name+"\" placeholder=\""+f.label+"\">";
+            InputSearchField f = InputSearchFields.getInputSearchField(field, null, false);
+            return getElementFromType(f);
+            
+        }
 
-            } else if(f.fieldType == "dropdown")
+        public static string getElementFromType(InputSearchField f)
+        {
+            string element;
+            if (f.fieldType == "text")
             {
-                element = "<select name =\""+f.name+"\" class=\"custom-select\"> " +
-                    "<option selected value = \"0\"> Select " + f.label + "</option>";
+                element = "<input type=\"text\"" + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : "class=\"form-control\"") + " name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\" value=\"" + f.value + "\">";
+
+            }
+            else if (f.fieldType == "dropdown")
+            {
+                element = "<select name =\"" + f.name + "\"" + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : " class=\"custom-select\"")+"> " +
+                    "<option "+(f.value == "" ? "selected" : "" )+" value = \"0\"> Select " + f.label + "</option>";
 
                 string[] c;
-                if(f.name == "country")
+                if (f.name == "country")
                 {
                     c = CasePaper.Countries;
-                    
-                } else if(f.name == "typeOfSuit")
+
+                }
+                else if (f.name == "typeOfSuit")
                 {
                     c = CasePaper.Suits;
-                } else if(f.name == "status")
+                }
+                else if (f.name == "status")
                 {
                     c = CasePaper.Statuses;
-                } else if(f.name == "courtOfLaw")
+                }
+                else if (f.name == "courtOfLaw")
                 {
                     c = CasePaper.Courts;
-                } else
+                }
+                else
                 {
                     c = null;
                 }
-                if(c != null) { 
-                for (var i = 0; i < c.Length; i++)
+                if (c != null)
                 {
-                    element += "<option value=\"" + (i + 1) + "\">" + c[i] + "</option>";
-                }
+                    for (var i = 0; i < c.Length; i++)
+                    {
+                        element += "<option "+ ((f.value != "" && Convert.ToInt32(f.value) == (i+1)) ? "selected" : "")+ "value=\"" + (i + 1) + "\">" + c[i] + "</option>";
+                    }
                 }
                 element += "</select>";
-       
-            } else if(f.fieldType == "date")
+
+            }
+            else if (f.fieldType == "date")
             {
-                element = "<input type=\"text\" class=\"form-control\" name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\">";
-            } else
+                element = "<input type=\"text\" "+ (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : "class=\"form-control\"")+" name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\" value=\""+f.value+"\">";
+            }
+            else if (f.fieldType == "textarea")
+            {
+                element = "<textarea " + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : "class=\"form-control\"") + " name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\" value=\"" + f.value + "\"> </textarea>";
+            }
+            else
             {
                 element = "";
             }

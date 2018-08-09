@@ -131,7 +131,7 @@ namespace MvcApplication1.Controllers
                 var i = 0;
                 for (i = 0; i < fields.Count;i++ )
                 {
-                    InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null);
+                    InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false);
                     if(fc[f.name] != null || fc[f.name] != "" || fc[f.name] != "0")
                     {
                         f.value = fc[f.name];
@@ -147,7 +147,7 @@ namespace MvcApplication1.Controllers
                     List<InputSearchField> t = new List<InputSearchField>();
                     for (var j = 0; j < fields.Count; j++)
                     {
-                        InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i]);
+                        InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i], false);
                         t.Add(f);
                     }
                     casesList.Add(t);
@@ -157,6 +157,20 @@ namespace MvcApplication1.Controllers
             }
 
             return View();
+        }
+
+        [HttpGet]
+        public ActionResult CaseInfo()
+        {
+            var CaseNumber = Request.QueryString["caseNo"];
+            CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
+            if (c != null)
+            {
+                ViewBag.caseDetail = c;
+                return View("ViewCaseInfo");
+            }
+            Response.StatusCode = 500;
+            return SendErrorResponse("Internal Server Error", "Unknown Error Occured");
         }
     }
 }
