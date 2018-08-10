@@ -320,6 +320,14 @@ namespace MvcApplication1.Models
         //public ICollection<Login> Logins {get; set;}
     }
 
+    public class History
+    {
+        [Key]
+        public string Id;
+        public string SearchString;
+        public Int64 SearchDate;
+    }
+
     public class CasePaper
     {
         public CasePaper() { }
@@ -959,7 +967,8 @@ namespace MvcApplication1.Models
         public DbSet<Requester> Requesters { get; set; }
         public DbSet<CasePaper> CasePapers { get; set; }
         public DbSet<SearchField> SearchFields { get; set; }
-        public ApplicationDbContext()
+        public DbSet<History> SearchHistory { get; set; }
+         public ApplicationDbContext()
             : base()
         {
             foreach(var i in SearchField.AllFields)

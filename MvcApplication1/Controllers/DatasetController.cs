@@ -109,10 +109,13 @@ namespace MvcApplication1.Controllers
             return SendRedirectResponse("/Dataset/BirdEyeView");
         }
 
-        [HttpPost]
-        public ActionResult Search(FormCollection fc)
+        [HttpGet]
+        public ActionResult Search()
         {
+            var fc = Request.QueryString;
+
             string searchStyle = fc["searchStyle"];
+            string saveSearch = fc["saveSearch"];
             if(searchStyle == "caseNo")
             {
                 string caseNo = fc["caseNo"];
@@ -120,6 +123,18 @@ namespace MvcApplication1.Controllers
                 if(c != null)
                 {
                     ViewBag.cases = c;
+                    if (saveSearch != null && saveSearch == "1")
+                    {
+                        History h = new History();
+                        h.Id = Guid.NewGuid().ToString();
+                        h.SearchDate =(Int64) DateTime.Now.Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds;
+                        h.SearchString = fc.ToString();
+                        int count = user.SearchHistory.ToList().Count;
+                        if (count >= 9)
+                        {
+                            var lastSearch = user.SearchHistory.OrderBy();
+                        }
+                    }
                     return View("ViewCase");
                 }
                 

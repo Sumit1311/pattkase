@@ -3,7 +3,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 <%@import Namespace="MvcApplication1.Models" %>
 <h2>Search Screen</h2>
-    <form id="_nav_search_form" action="/Dataset/Search" method="POST">
+    <form id="_nav_search_form" action="/Dataset/Search" method="GET">
         <div class="form-row">
         <div class="form-group col-md-8">
     <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Case Search" name="caseSearch">
@@ -21,7 +21,7 @@
               
 
                           <h5>Case Search Style</h5>
-
+                <input type="hidden" name="saveSearch" value="1" />
     
                   <div class="form-row">
             <div class="form-check form-check-inline col-md-3">
