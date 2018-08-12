@@ -12,7 +12,7 @@
             <a href="/Dataset/SearchHistory" class="btn">Search History</a>
         </div>
             <div class="col-md-2">
-            <a href="/Dataset/SearchHistory" class="btn">Search Help</a>
+            <a href="/Dataset/SearchHelp" class="btn">Search Help</a>
         </div>
             </div>
         
@@ -48,7 +48,7 @@
                 <h6 class="card-title">Fielded Search Criteria</h6>
                 <% var fields = this.ViewBag.searchFields; %>
                 <% for (int i = 0; i < fields.Count; i++) {
-                        InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false);        
+                       InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false, null);        
                             if((i) % 2 == 0)
                             {
                                 if( i != 0) {%>

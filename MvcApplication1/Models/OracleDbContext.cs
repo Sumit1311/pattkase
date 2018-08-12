@@ -14,6 +14,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using EntityFramework.Functions;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MvcApplication1.Library;
+using System.Globalization;
 
 namespace MvcApplication1.Models
 {
@@ -41,14 +43,16 @@ namespace MvcApplication1.Models
         public string caseInDetail { get; set; }
         public string flowchart { get; set; }
 
-        public InputDataset() : base() { }
+        public InputDataset() : base() {
+            
+        }
 
         public InputDataset(FormCollection fc)
         {
             plaintiff = fc["plaintiff"];
         defendant = fc["defendant"];
          country = Convert.ToInt32(fc["country"]);
-         dateOfFiling = Convert.ToInt64(fc["dateOfFiling"]);
+         dateOfFiling = DateHelper.getMillisecondsFromEpoch(fc["dateOfFiling"]);
          courtOfLaw = Convert.ToInt32(fc["courtOfLaw"]);
         sequel = fc["sequel"];
         judgeName = fc["judgeName"];
@@ -58,7 +62,8 @@ namespace MvcApplication1.Models
         patentsAtIssue = fc["patentsAtIssue"];
         caseSummary = fc["caseSummary"] != null ? fc["caseSummary"].Replace("\r\n", " ") : fc["caseSummary"];
         courtInterpretation = fc["courtInterpretation"] != null ? fc["courtInterpretation"].Replace("\r\n", " ") : fc["courtInterpretation"];
-        dateOfJudgement = Convert.ToInt64(fc["dateOfJudgement"]);
+            
+        dateOfJudgement = DateHelper.getMillisecondsFromEpoch(fc["dateOfJudgement"]);
         caseDecision = fc["caseDecision"] != null ? fc["caseDecision"].Replace("\r\n", " ") : fc["caseDecision"];
         furtherAppeals = fc["furtherAppeals"];
         status = Convert.ToInt32(fc["status"]);
@@ -441,11 +446,16 @@ namespace MvcApplication1.Models
 
     public class InputSearchFields
     {
-        public static InputSearchField getInputSearchField(string field, CasePaper c, bool isReadOnly)
+        public static InputSearchField getInputSearchField(string field, CasePaper c, bool isReadOnly, string value)
         {
             InputSearchField f = new InputSearchField( );
+            if (value != null)
+            {
+                f.value = value;
+            }
             switch(field)
             {
+                case "caseNo":
                 case "CaseNo":
                     //f.element ="<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" name=\"plaintiff\" placeholder=\"Plaintiff\">";
                     f.fieldType = "text";
@@ -458,18 +468,20 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "plaintiff":
                 case "Plaintiff":
                     //f.element ="<input type=\"text\" class=\"form-control\" id=\"exampleInputEmail1\" aria-describedby=\"emailHelp\" name=\"plaintiff\" placeholder=\"Plaintiff\">";
                     f.fieldType = "text";
                     f.label = "Plaintiff";
                     f.name = "plaintiff";
                     f.isReadOnly = isReadOnly;
-                    if(c != null)
+                    if (c != null)
                     {
                         f.value = c.Plaintiff;
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "defendant":
                 case "Defendant":
                     f.fieldType = "text";
                     f.label = "Defendant";
@@ -481,6 +493,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "dateOfFiling":
                 case "DateOfFiling":
                 case "Date Of Filing":
                     f.fieldType = "date";
@@ -494,6 +507,7 @@ namespace MvcApplication1.Models
 
                     f.element = getElementFromType(f);
                     break;
+                case "courtOfLaw":
                 case "CourtOfLaw":
                 case "Court Of Law":
                     f.fieldType = "dropdown";
@@ -506,6 +520,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "sequel":
                 case "Sequel":
                     f.fieldType = "text";
                     f.label = "Sequel";
@@ -517,6 +532,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "judgeName":
                 case "JudgeName":
                 case "Judge Name":
                     f.fieldType = "text";
@@ -529,6 +545,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "typeOfSuit":
                 case "TypeOfSuit":
                 case "Type Of Suit":
                     f.fieldType = "dropdown";
@@ -541,6 +558,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "relatedTo":
                 case "RelatedTo":
                 case "Related To":
                     f.fieldType = "text";
@@ -553,6 +571,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "underSection":
                 case "UnderSection":
                 case "Under Section":
                     f.fieldType = "text";
@@ -565,6 +584,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "patentsAtIssue":
                 case "PatentsAtIssue":
                 case "Patents At Issue":
                     f.fieldType = "text";
@@ -577,6 +597,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                
                 case "CourtInterpretation":
                     f.fieldType = "textarea";
                     f.label = "Court Interpretation";
@@ -588,6 +609,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "courtInterpretation":
                 case "Court Interpretation":
                     f.fieldType = "text";
                     f.label = "Court Interpretation";
@@ -599,6 +621,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "dateOfJudgement":
                 case "DateOfJudgement":
                 case "Date Of Judgement":
                     f.fieldType = "date";
@@ -620,6 +643,7 @@ namespace MvcApplication1.Models
                         f.value = c.CaseDecision;
                     }
                     break;*/
+                case "furtherAppeals":
                 case "FurtherAppeals":
                 case "Further Appeals":
                     f.fieldType = "text";
@@ -633,6 +657,7 @@ namespace MvcApplication1.Models
 
                     f.element = getElementFromType(f);
                     break;
+                case "status":
                 case "Status":
                     f.fieldType = "dropdown";
                     f.label = "Status";
@@ -655,6 +680,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                case "caseSummary":
                 case "Keyword 1":
                     f.fieldType = "text";
                     f.label = "Keyword 1";
@@ -666,6 +692,7 @@ namespace MvcApplication1.Models
                     }
                     f.element = getElementFromType(f);
                     break;
+                
                 case "CaseDecision":
                     f.fieldType = "textarea";
                     f.label = "Case Decision";
@@ -678,6 +705,7 @@ namespace MvcApplication1.Models
 
                     f.element = getElementFromType(f);
                     break;
+                case "caseDecision":
                 case "Keyword 2":
                     f.fieldType = "text";
                     f.label = "Keyword 2";
@@ -690,6 +718,7 @@ namespace MvcApplication1.Models
 
                     f.element = getElementFromType(f);
                     break;
+                case "country":
                 case "Country":
                     f.fieldType = "dropdown";
                     f.label = "Country";
@@ -713,9 +742,10 @@ namespace MvcApplication1.Models
 
                     f.element = getElementFromType(f);
                     break;
+                case "caseSearch":
                 case "Case In Detail":
-                    f.fieldType = "textarea";
-                    f.label = "Case In Detail";
+                    f.fieldType = "text";
+                    f.label = field == "caseSearch" ? "Case Search" : "Case In Detail";
                     f.name = "caseSearch";
                     f.isReadOnly = isReadOnly;
                     if (c != null)
@@ -725,13 +755,22 @@ namespace MvcApplication1.Models
 
                     f.element = getElementFromType(f);
                     break;
-                
+                case "searchStyle":
+                    f.fieldType = "text";
+                    f.label = "Case Search Style";
+                    f.name = "searchStyle";
+                    f.isReadOnly = isReadOnly;
+                    f.element = getElementFromType(f);
+                    break;         
+                /*default :
+                    f = null;
+                    break;*/
             }
             return f;
         }
         public static string getInputElement(string field)
         {
-            InputSearchField f = InputSearchFields.getInputSearchField(field, null, false);
+            InputSearchField f = InputSearchFields.getInputSearchField(field, null, false, null);
             return getElementFromType(f);
             
         }
@@ -746,7 +785,7 @@ namespace MvcApplication1.Models
             }
             else if (f.fieldType == "dropdown")
             {
-                element = "<select name =\"" + f.name + "\"" + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : " class=\"custom-select\"")+"> " +
+                element = "<select name =\"" + f.name + "\"" + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly disabled" : " class=\"custom-select\"")+"> " +
                     "<option "+(f.value == "" ? "selected" : "" )+" value = \"0\"> Select " + f.label + "</option>";
 
                 string[] c;
@@ -783,11 +822,12 @@ namespace MvcApplication1.Models
             }
             else if (f.fieldType == "date")
             {
-                element = "<input type=\"text\" "+ (f.isReadOnly ? "class=\"form-control-plaintext datepicker\" readonly" : "class=\"form-control datepicker\"")+" name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\" value=\""+f.value+"\">";
+                string val = ((f.value != "" && f.value != null) ? DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToString(DateHelper.dateFormat) : "");
+                element = "<input type=\"text\" "+ (f.isReadOnly ? "class=\"form-control-plaintext datepicker\" readonly disabled" : "class=\"form-control datepicker\"")+" name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\" value=\""+ val +"\">";
             }
             else if (f.fieldType == "textarea")
             {
-                element = "<textarea " + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly" : "class=\"form-control\"") + " name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\">"+f.value+" </textarea>";
+                element = "<textarea " + (f.isReadOnly ? "class=\"form-control-plaintext\" readonly disabled" : "class=\"form-control\"") + " name=\"" + f.name + "\" id=\"_nav_search_field_" + f.name + "\" placeholder=\"" + f.label + "\">"+f.value+" </textarea>";
             }
             else
             {
@@ -803,7 +843,7 @@ namespace MvcApplication1.Models
             string whereClause = "WHERE ";
             List<object> parameters = new List<object>();
             InputSearchField caseSearch = fields.Find(f => f.name == "caseSearch");
-            whereClause += " UPPER(\"" + "CaseInDetail"+ "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+            whereClause += " UPPER(\"" + "CaseInDetail"+ "\")  LIKE '%' || :" + parameters.Count + "|| '%'";
             parameters.Add(caseSearch.value.ToUpper());
             for (var i = 0; i < fields.Count; i++)
             {
@@ -815,42 +855,49 @@ namespace MvcApplication1.Models
                     {
                         var columnName = "CaseNo";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%'";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "plaintiff")
                     {
                         var columnName = "Plaintiff";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%'";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "defendant")
                     {
                         var columnName = "Defendant";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \"" +columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "dateOfFiling")
                     {
-                        var columnName = "DateOfFiling";
-                        //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt64(f.value));
+                        if (f.value != "")
+                        {
+                            var columnName = "DateOfFiling";
+                            //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
+                            whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
+                            parameters.Add(DateHelper.getMillisecondsFromEpoch(f.value));
+                        }
                     }
                     else if (f.name == "courtOfLaw")
                     {
-                        var columnName = "CourtOfLaw";
-                        //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(f.value));
+                        if (f.value != "" && f.value != "0" && Convert.ToInt32(f.value) < CasePaper.Courts.Length)
+                        {
+                            var columnName = "CourtOfLaw";
+                            //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
+                            whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
+                            parameters.Add(Convert.ToInt32(f.value));
+                        }
+                        
                     }
                     else if (f.name == "sequel")
                     {
                         var columnName = "Sequel";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "judgeName")
@@ -862,86 +909,101 @@ namespace MvcApplication1.Models
                     }
                     else if (f.name == "typeOfSuit")
                     {
-                        var columnName = "TypeOfSuit";
-                        //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(f.value));
+                        if (f.value != "" && f.value != "0" && Convert.ToInt32(f.value) < CasePaper.Suits.Length) 
+                        { 
+                            var columnName = "TypeOfSuit";
+                            //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
+                            whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
+                            parameters.Add(Convert.ToInt32(f.value));
+                        }
                     }
                     else if (f.name == "relatedTo")
                     {
                         var columnName = "RelatedTo";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "underSection")
                     {
                         var columnName = "UnderSection";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "patentsAtIssue")
                     {
                         var columnName = "PatentsAtIssue";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "courtInterpretation")
                     {
                         var columnName = "CourtInterpretation";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "dateOfJudgement")
                     {
-                        var columnName = "DateOfJudgement";
-                        //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt64(f.value));
+                        if (f.value != "")
+                        {
+                            var columnName = "DateOfJudgement";
+                            //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
+                            whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
+                            parameters.Add(DateHelper.getMillisecondsFromEpoch(f.value));
+                        }
+                        
                     }
                     else if (f.name == "caseDecision")
                     {
                         var columnName = "CaseDecision";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "furtherAppeals")
                     {
                         var columnName = "FutherAppeals";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' + :" + parameters.Count + "+ '%'";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "status")
                     {
-                        var columnName = "Status";
-                        //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(f.value));
+                        if (f.value != "" && f.value != "0" && Convert.ToInt32(f.value) < CasePaper.Statuses.Length)
+                        {
+                            var columnName = "Status";
+                            //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
+                            whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
+                            parameters.Add(Convert.ToInt32(f.value));
+                        }
+                        
                     }
                     else if (f.name == "country")
                     {
-                        var columnName = "Country";
-                        //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
-                        parameters.Add(Convert.ToInt32(f.value));
+                        if (f.value != "" && f.value != "0" && Convert.ToInt32(f.value) < CasePaper.Countries.Length)
+                        {
+                            var columnName = "Country";
+                            //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
+                            whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" = :" + parameters.Count + "";
+                            parameters.Add(Convert.ToInt32(f.value));
+                        }
+                        
                     }
                     else if (f.name == "key1")
                     {
                         var columnName = "CaseSummary";
                         //selectClause += (parameters.Count == 0 ? "" : ",") + " \"" + columnName + "\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + " + '%' ";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" LIKE '%' || :" + parameters.Count + " || '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     else if (f.name == "key2")
                     {
                         var columnName = "CaseDecision";
                         //selectClause += (parameters.Count == 0 ? "" : ",") + " \"" + columnName + "\"";
-                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" LIKE '%' + :" + parameters.Count + "+ '%' ";
+                        whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + "\"" + columnName + "\" LIKE '%' || :" + parameters.Count + "|| '%' ";
                         parameters.Add(f.value.ToUpper());
                     }
                     //Key1 and key2

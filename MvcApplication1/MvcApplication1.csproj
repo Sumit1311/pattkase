@@ -283,8 +283,9 @@
     <Content Include="Views\Auth\ViewRequester.aspx" />
     <Content Include="Views\Auth\Register.aspx" />
     <Content Include="Views\Auth\Login.aspx" />
-    <Content Include="Views\Dataset\BirdEyeView.aspx" />
+    <Content Include="Views\Dataset\SearchResults.aspx" />
     <Content Include="Views\Dataset\EditSearchFields.aspx" />
+    <Content Include="Views\Dataset\SearchHistory.aspx" />
     <Content Include="Views\Dataset\ViewCaseInfo.aspx" />
     <Content Include="Views\Error-500.aspx" />
     <Content Include="Views\Home\Requesters.aspx" />

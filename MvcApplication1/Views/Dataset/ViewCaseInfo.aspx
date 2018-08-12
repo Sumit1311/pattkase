@@ -23,7 +23,7 @@
 				</div>
 			</div>
   <div class="form-row">
-      <% InputSearchField f = InputSearchFields.getInputSearchField("CaseNo", c, true); %>
+      <% InputSearchField f = InputSearchFields.getInputSearchField("CaseNo", c, true, null); %>
     <div class="form-group col-md-2">
       <label for="inputEmail4" class="col-form-label custom-label"><%=f.label %></label>
       
@@ -35,14 +35,14 @@
   </div>
   <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("Plaintiff", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("Plaintiff", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("Defendant", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("Defendant", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
@@ -52,14 +52,14 @@
 
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("Country", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("Country", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("Date Of Filing", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("Date Of Filing", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
@@ -69,14 +69,14 @@
 
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("CourtOfLaw", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("CourtOfLaw", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("Sequel", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("Sequel", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
@@ -85,14 +85,14 @@
   </div>
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("CourtInterpretation", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("CourtInterpretation", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("TypeOfSuit", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("TypeOfSuit", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
@@ -101,14 +101,14 @@
   </div>
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("RelatedTo", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("RelatedTo", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("UnderSection", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("UnderSection", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
@@ -117,14 +117,14 @@
   </div>
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("PatentsAtIssue", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("PatentsAtIssue", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("DateOfJudgement", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("DateOfJudgement", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
@@ -134,7 +134,7 @@
 
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("CaseDecision", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("CaseDecision", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-10">
@@ -143,7 +143,7 @@
   </div>
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("CaseSummary", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("CaseSummary", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-10">
@@ -152,7 +152,7 @@
   </div>
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("CaseInDetail", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("CaseInDetail", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-10">
@@ -162,14 +162,14 @@
 
     <div class="form-row">
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("FurtherAppeals", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("FurtherAppeals", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">
         <%= f.element %>
             </div>
     <div class="form-group col-md-2">
-        <% f = InputSearchFields.getInputSearchField("Status", c, true); %>
+        <% f = InputSearchFields.getInputSearchField("Status", c, true, null); %>
       <label for="" class="col-form-label custom-label"><%= f.label %></label>
     </div>      
         <div class="form-group col-md-4">

@@ -156,7 +156,7 @@ namespace MvcApplication1.Controllers
             var i = 0;
             for (i = 0; i < fields.Count; i++)
             {
-                InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false);
+                InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false, null);
                 if (f.name == "caseSearch" || (fc[f.name] != null))
                 {
                     f.value = fc[f.name];
@@ -172,12 +172,12 @@ namespace MvcApplication1.Controllers
                 List<InputSearchField> t = new List<InputSearchField>();
                 for (var j = 0; j < fields.Count; j++)
                 {
-                    InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i], false);
+                    InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i], false, null);
                     t.Add(f);
                 }
                 casesList.Add(t);
             }
-            ViewBag.caseResults = casesList;
+            ViewBag.caseResults = cases;
             if (saveSearch != null && saveSearch == "1")
             {
                 var tempFc = HttpUtility.ParseQueryString(fc.ToString());
@@ -186,13 +186,13 @@ namespace MvcApplication1.Controllers
                 if (s.Count >= 9)
                 {
                     s[0].SearchString = tempFc.ToString();
-                    s[0].SearchDate = (Int64)DateTime.Now.Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds;
+                    s[0].SearchDate = DateHelper.getMillisecondsFromEpoch();
                 }
                 else
                 {
                     History h = new History();
                     h.Id = Guid.NewGuid().ToString();
-                    h.SearchDate = (Int64)DateTime.Now.Subtract(DateTime.MinValue.AddYears(1969)).TotalMilliseconds;
+                    h.SearchDate = DateHelper.getMillisecondsFromEpoch();
                     h.SearchString = tempFc.ToString();
                     user.SearchHistory.Add(h);
                 }
@@ -260,14 +260,14 @@ namespace MvcApplication1.Controllers
                 for (var j = 0; j < columns.Length; j++)
                 {
 
-                    worksheet.Cells[1, (j + 1)] = InputSearchFields.getInputSearchField(columns[j], null, false).label;
+                    worksheet.Cells[1, (j + 1)] = InputSearchFields.getInputSearchField(columns[j], null, false, null).label;
                 }
 
                 for (var i = 0; i < caseList.Count; i++)
                 {
                     for (var j = 0; j < columns.Length; j++)
                     {
-                        InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false);
+                        InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false, null);
                         string val;
                         if (j == 3)
                         {
@@ -324,7 +324,7 @@ namespace MvcApplication1.Controllers
                     for (var j = 0; j < columns.Length; j++)
                     {
                         
-                        InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false);
+                        InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false, null);
                         string val;
                         if (j == 3)
                         {
@@ -382,6 +382,13 @@ namespace MvcApplication1.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult SearchHistory()
+        {
+            var history = user.SearchHistory.OrderByDescending(x => x.SearchDate).ToList();
+            ViewBag.history = history;
+            return View("SearchHistory");
         }
     }
 }
