@@ -31,6 +31,7 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult LogIn()
         {
+            ViewBag.ReturnUrl = Request.QueryString["ReturnUrl"];
             return View();
         }
 

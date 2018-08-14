@@ -6,4 +6,5 @@ DROP TABLE "AspNetUsers";
 DROP TABLE "Requesters";
 DROP TABLE "CasePapers";
 DROP TABLE "SearchFields";
+DROP TABLE "Histories";
 DROP SEQUENCE "SQ_AspNetUserClaims";

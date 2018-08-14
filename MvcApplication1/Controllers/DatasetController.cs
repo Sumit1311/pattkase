@@ -24,6 +24,7 @@ namespace MvcApplication1.Controllers
 
         }
         // GET: Dataset
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult ModifySearchFields()
         {
@@ -69,7 +70,7 @@ namespace MvcApplication1.Controllers
                 message = "Successfully Saved Data."
             });
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult BirdEyeView()
         {
@@ -82,6 +83,7 @@ namespace MvcApplication1.Controllers
             return View("BirdEyeView");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult BirdEyeView(List<InputDatasetRequest> dataset)
         {
@@ -217,6 +219,7 @@ namespace MvcApplication1.Controllers
             return SendErrorResponse("Internal Server Error", "Unknown Error Occured");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult CaseInfo(FormCollection fc)
         {

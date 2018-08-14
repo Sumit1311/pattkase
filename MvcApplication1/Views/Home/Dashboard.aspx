@@ -16,8 +16,8 @@
         </div>
             </div>
         
-        <div class="card ">
-            <div class="card-header text-white bg-info mb-3">
+        <div id="" class="card ">
+            <div class="card-header text-white bg-info">
               
 
                           <h5>Case Search Style</h5>
@@ -29,29 +29,45 @@
   <label class="form-check-label" for="inlineCheckbox1">Case Number</label>
 </div>
 <div class="form-check form-check-inline col-md-3">
-  <input class="form-check-input" type="radio" id="_nav_search_style_field" name="searchStyle" value="fielded" checked>
+  <input class="form-check-input" type="radio" id="_nav_search_style_field" name="searchStyle" value="fielded">
   <label class="form-check-label" for="inlineCheckbox2">Fielded</label>
 </div>
         </div>
   </div>
             <div class="card-body">
-            <div id="_nav_case_no_search" class="d-none">
+            <div id="_nav_case_no_search">
                 <h6 class="card-title">Case Number Search</h6>
                 <div class="form-group row">
     <label for="inputPassword" class="col-md-3 col-form-label">Case Number : </label>
     <div class="col-md-6">
-      <input type="text" class="form-control" id="inputPassword" placeholder="Enter Case Number" name="caseNo" disabled>
+      <input type="text" class="form-control" id="inputPassword" placeholder="Enter Case Number" name="caseNo">
     </div>
   </div>
             </div>
             <div id="_nav_fielded_search">
                 <h6 class="card-title">Fielded Search Criteria</h6>
                 <% var fields = this.ViewBag.searchFields; %>
-                <% for (int i = 0; i < fields.Count; i++) {
-                       InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false, null);        
-                            if((i) % 2 == 0)
-                            {
-                                if( i != 0) {%>
+                <% if (fields.Count == 0)
+                    { %>
+                <% if (HttpContext.Current.User.IsInRole("Admin"))
+                    { %>
+                <p>Please select fields from <b>Profile -> Edit Search Fields</b></p>
+                <p>Only fields selected there would be visible here.</p>
+                <% }
+    else
+    { %>
+                <p>No Fields Selected For Search. Please ask administrator to select fields for fielded search.</p>
+                <%} %>
+                <%}
+    else
+    { %>
+                <% for (int i = 0; i < fields.Count; i++)
+    {
+        InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false, null);
+        if ((i) % 2 == 0)
+        {
+            if (i != 0)
+            {%>
                                    </div>
                                 <% }%>
                                     <div class="form-row form-group">      
@@ -66,8 +82,9 @@
                                          <div class="col-md-4">
                             <%= f.element %>
                             </div>
-                            <%} else
-                            {%>
+                            <%}
+    else
+    {%>
                                         <div class="col-md-2">
                                             <select class="custom-select" name="operator_<%= f.name%>" >
                           
@@ -80,16 +97,18 @@
                             <%= f.element %>
                             </div>
                             <%}
-                                    
-                                    if(i == fields.Count - 1)
-                                    {%>
+
+    if (i == fields.Count - 1)
+    {%>
                                         </div>
-                                    <%} 
-                                      } %>
+                                    <%}
+    } %>
+                <%} %>
                                 
                 </div>
+            </div>
                 
-            <div class="card-footer text-white bg-info mb-3">
+            <div class="card-footer text-white bg-info">
                  <button type="submit" class="button btn-success btn-md border-white align-middle active rounded-circle">Run</button>
             </div>
         </div>
@@ -103,6 +122,14 @@
 
 <asp:Content ID="Content3" ContentPlaceHolderID="ScriptSection" runat="server">
     <script>
+        
+            
+        $("#_nav_fielded_search input").prop("disabled", true);
+        $("#_nav_fielded_search select").prop("disabled", true);
+        $("#_nav_case_no_search input").prop("disabled", false);
+        $("#_nav_case_no_search select").prop("disabled", false);
+        $("#_nav_fielded_search").addClass("d-none");
+        $("input[type=radio][name=searchStyle][value=caseNo]").prop("checked", true);
         $("input[type=radio][name=searchStyle]").change(function (event) {
             if (this.value == "caseNo") {
                 $("#_nav_fielded_search input").prop("disabled", true);

@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace MvcApplication1.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         //
         // GET: /Home/
@@ -23,7 +23,7 @@ namespace MvcApplication1.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            return SendRedirectResponse(Url.Action("Dashboard", "Home"));
         }
         
 

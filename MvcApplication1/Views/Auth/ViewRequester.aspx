@@ -52,22 +52,26 @@
             <div class="card-body">
                 
 <form method="POST" action="/Auth/Approve">
+    <% if (!this.ViewBag.isApproved)
+        {%>
     <div class="form-row">
         <div class="form-group col-md-2">
             <label for="">Grant Access : </label>
             </div>
+        
        <div class="form-group col-md-6">
     <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+  <input class="form-check-input" type="radio" name="grantAccess" id="inlineRadio1" value="yes" checked>
   <label class="form-check-label" for="inlineRadio1">Yes</label>
 </div>
     
 <div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+  <input class="form-check-input" type="radio" name="grantAccess" id="inlineRadio2" value="no" <%= this.ViewBag.isApproved ? "disabled" : "" %> ">
   <label class="form-check-label" for="inlineRadio2">No</label>
 </div> 
                </div>
         </div>
+    <%} %>
     
   <div class="form-row">
       <input type="hidden" name="reqId" value="<%= r.Id %>" />
@@ -86,8 +90,10 @@
     </div>
       
   </div>
-  
+  <% if (!this.ViewBag.isApproved)
+      {%>
   <button type="submit" class="btn btn-primary<%= this.ViewBag.isApproved ? "disabled" : "" %> ">Approve</button>
+    <%} %>
 </form>
                 </div>
 
