@@ -2,9 +2,10 @@
 <%@import Namespace="MvcApplication1.Models" %>
 <%@import Namespace="MvcApplication1.Library" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
+    <h2>Recent Searches</h2>
     <%var h = this.ViewBag.history; %>
     <%if(h.Count == 0){ %>
-    <h6>No history Found</h6>
+    <p>No search history Found</p>
     <%} else { %>
     <div id="accordion">
     <%for(var i = 0; i < h.Count; i++){ %>

@@ -11,7 +11,7 @@
 
  <div id="_nav_login_div">
          
-<form action="/Auth/Login" method="POST" class="form_body">
+<form action="/Auth/Login<%= this.ViewBag.ReturnUrl != null && this.ViewBag.ReturnUrl != "" ? "?ReturnUrl=" + this.ViewBag.ReturnUrl : "" %>" method="POST" class="form_body">
 <h1 class="logo_main">PattKase</h1>
  <h3 class="logo_tagline">Gluing Patent Law with R&D Technology</h3>
  &nbsp;

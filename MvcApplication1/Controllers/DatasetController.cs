@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MvcApplication1.Models;
-using System.Data.Entity;
-using System.Text;
-using System.Drawing;
 using Microsoft.Office.Interop.Excel;
 using MvcApplication1.Library;
 using iTextSharp.text;
-using iTextSharp.text.pdf.fonts;
 using iTextSharp.text.pdf;
 
 namespace MvcApplication1.Controllers
@@ -24,10 +19,19 @@ namespace MvcApplication1.Controllers
 
         }
         // GET: Dataset
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult ModifySearchFields()
         {
-            ViewBag.SearchFields = user.SearchFields.ToList();
+            try
+            { 
+                ViewBag.SearchFields = user.SearchFields.ToList();
+            }
+            catch (Exception o)
+            {
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", o.Message);
+            }
 
             return View("EditSearchFields");
         }
@@ -47,6 +51,11 @@ namespace MvcApplication1.Controllers
                         {
                             f.Show = true;
                         }
+                        else
+                        {
+                            Response.StatusCode = 400;
+                            return SendErrorResponse("Bad Request", "The field Name doesnot exist.");
+                        }
 
                     }
                     else
@@ -56,12 +65,18 @@ namespace MvcApplication1.Controllers
                         {
                             f.Show = false;
                         }
+                        else
+                        {
+                            Response.StatusCode = 400;
+                            return SendErrorResponse("Bad Request", "The field Name doesnot exist.");
+                        }
                     }
                 }
                 user.SaveChanges();
             }
             catch (Exception e)
             {
+                Response.StatusCode = 500;
                 return SendErrorResponse("Internal Server Error", e.Message);
             }
             return SendAjaxResponse("ok", new
@@ -69,325 +84,400 @@ namespace MvcApplication1.Controllers
                 message = "Successfully Saved Data."
             });
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult BirdEyeView()
         {
-            List<CasePaper> dataset = user.CasePapers.ToList();
-            ViewBag.Countries = CasePaper.Countries;
-            ViewBag.Courts = CasePaper.Courts;
-            ViewBag.Suits = CasePaper.Suits;
-            ViewBag.Statuses = CasePaper.Statuses;
-            ViewBag.Dataset = dataset;
+            try { 
+                List<CasePaper> dataset = user.CasePapers.ToList();
+                ViewBag.Countries = CasePaper.Countries;
+                ViewBag.Courts = CasePaper.Courts;
+                ViewBag.Suits = CasePaper.Suits;
+                ViewBag.Statuses = CasePaper.Statuses;
+                ViewBag.Dataset = dataset;
+            } 
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
+            }
             return View("BirdEyeView");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult BirdEyeView(List<InputDatasetRequest> dataset)
         {
-            for (var i = 0; i < dataset.Count; i++)
+            try
             {
-                var data = dataset[i].data;
-                if (dataset[i].type == "new" && data != null)
+                for (var i = 0; i < dataset.Count; i++)
                 {
-                    for (var j = 0; j < data.Count; j++)
+                    var data = dataset[i].data;
+                    if (dataset[i].type == "new" && data != null)
                     {
-                        //user.CasePapers.Add(data[0]);
-                        user.CasePapers.Add(data[j].ConvertToDatabaseModel());
-                    }
-                }
-                if (dataset[i].type == "update" && data != null)
-                {
-                    for (var j = 0; j < data.Count; j++)
-                    {
-                        if (data[j].id != null)
+                        for (var j = 0; j < data.Count; j++)
                         {
-                            var id = data[j].id;
-                            var updatedCase = user.CasePapers.FirstOrDefault(c => c.Id == id);
-                            if (updatedCase != null)
+                            //user.CasePapers.Add(data[0]);
+                            user.CasePapers.Add(data[j].ConvertToDatabaseModel());
+                        }
+                    }
+                    if (dataset[i].type == "update" && data != null)
+                    {
+                        for (var j = 0; j < data.Count; j++)
+                        {
+                            if (data[j].id != null)
                             {
-                                data[j].ConvertToDatabaseModel(ref updatedCase);
+                                var id = data[j].id;
+                                var updatedCase = user.CasePapers.FirstOrDefault(c => c.Id == id);
+                                if (updatedCase != null)
+                                {
+                                    data[j].ConvertToDatabaseModel(ref updatedCase);
+                                }
+                            }
+                        }
+                    }
+                    if (dataset[i].type == "delete" && data != null)
+                    {
+                        for (var j = 0; j < data.Count; j++)
+                        {
+                            if (data[j].id != null)
+                            {
+                                var id = data[j].id;
+                                user.CasePapers.RemoveRange(user.CasePapers.Where(e => e.Id == id));
                             }
                         }
                     }
                 }
-                if (dataset[i].type == "delete" && data != null)
-                {
-                    for (var j = 0; j < data.Count; j++)
-                    {
-                        if (data[j].id != null)
-                        {
-                            var id = data[j].id;
-                            user.CasePapers.RemoveRange(user.CasePapers.Where(e => e.Id == id));
-                        }
-                    }
-                }
+                user.SaveChanges();
+            } catch(Exception e)
+            {
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
-            user.SaveChanges();
             return SendRedirectResponse("/Dataset/BirdEyeView");
         }
 
         [HttpGet]
         public ActionResult Search()
         {
-            var fc = Request.QueryString;
-            //caseSearch compulsory
-            string searchStyle = fc["searchStyle"];
-            string saveSearch = fc["saveSearch"];
-            List<SearchField> fields = new List<SearchField>();
-            fields.Add(new SearchField
+            try
             {
-                FieldName = "Case In Detail"
-            });
-            if (searchStyle == "caseNo")
-            {
+                var fc = Request.QueryString;
+                //caseSearch compulsory
+                string searchStyle = fc["searchStyle"];
+                string saveSearch = fc["saveSearch"];
+                List<SearchField> fields = new List<SearchField>();
                 fields.Add(new SearchField
                 {
-                    FieldName = "CaseNo"
+                    FieldName = "Case In Detail"
                 });
-            }
-            else if (searchStyle == "fielded")
-            {
-                List<SearchField> d = user.SearchFields.Where(f => f.Show == true).ToList();
-                fields.AddRange(d);
-            }
-
-            List<InputSearchField> inputList = new List<InputSearchField>();
-            var i = 0;
-            for (i = 0; i < fields.Count; i++)
-            {
-                InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false, null);
-                if (f.name == "caseSearch" || (fc[f.name] != null))
+                if (searchStyle == "caseNo")
                 {
-                    f.value = fc[f.name];
-                    inputList.Add(f);
+                    fields.Add(new SearchField
+                    {
+                        FieldName = "CaseNo"
+                    });
                 }
-
-            }
-            SqlQuery q = InputSearchFields.getSqlQuery(inputList, fc);
-            var cases = user.CasePapers.SqlQuery(q.queryString, q.parameters.ToArray()).ToList();
-            List<List<InputSearchField>> casesList = new List<List<InputSearchField>>();
-            for (i = 0; i < cases.Count; i++)
-            {
-                List<InputSearchField> t = new List<InputSearchField>();
-                for (var j = 0; j < fields.Count; j++)
+                else if (searchStyle == "fielded")
                 {
-                    InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i], false, null);
-                    t.Add(f);
-                }
-                casesList.Add(t);
-            }
-            ViewBag.caseResults = cases;
-            if (saveSearch != null && saveSearch == "1")
-            {
-                var tempFc = HttpUtility.ParseQueryString(fc.ToString());
-                tempFc["saveSearch"] = "0";
-                var s = user.SearchHistory.OrderBy(x => x.SearchDate).ToList();
-                if (s.Count >= 9)
-                {
-                    s[0].SearchString = tempFc.ToString();
-                    s[0].SearchDate = DateHelper.getMillisecondsFromEpoch();
+                    List<SearchField> d = user.SearchFields.Where(f => f.Show == true).ToList();
+                    fields.AddRange(d);
                 }
                 else
                 {
-                    History h = new History();
-                    h.Id = Guid.NewGuid().ToString();
-                    h.SearchDate = DateHelper.getMillisecondsFromEpoch();
-                    h.SearchString = tempFc.ToString();
-                    user.SearchHistory.Add(h);
+            
+                Response.StatusCode = 400;
+                return SendErrorResponse("Bad Request", "Valiation of fields failed");
+            
                 }
-                user.SaveChanges();
+
+                List<InputSearchField> inputList = new List<InputSearchField>();
+                var i = 0;
+                for (i = 0; i < fields.Count; i++)
+                {
+                    InputSearchField f = InputSearchFields.getInputSearchField(fields[i].FieldName, null, false, null);
+                    if (f.name == "caseSearch" || (fc[f.name] != null))
+                    {
+                        f.value = fc[f.name];
+                        inputList.Add(f);
+                    }
+
+                }
+                SqlQuery q = InputSearchFields.getSqlQuery(inputList, fc);
+                var cases = user.CasePapers.SqlQuery(q.queryString, q.parameters.ToArray()).ToList();
+                List<List<InputSearchField>> casesList = new List<List<InputSearchField>>();
+                for (i = 0; i < cases.Count; i++)
+                {
+                    List<InputSearchField> t = new List<InputSearchField>();
+                    for (var j = 0; j < fields.Count; j++)
+                    {
+                        InputSearchField f = InputSearchFields.getInputSearchField(fields[j].FieldName, cases[i], false, null);
+                        t.Add(f);
+                    }
+                    casesList.Add(t);
+                }
+                ViewBag.caseResults = cases;
+                if (saveSearch != null && saveSearch == "1")
+                {
+                    var tempFc = HttpUtility.ParseQueryString(fc.ToString());
+                    tempFc["saveSearch"] = "0";
+                    var s = user.SearchHistory.OrderBy(x => x.SearchDate).ToList();
+                    if (s.Count >= 9)
+                    {
+                        s[0].SearchString = tempFc.ToString();
+                        s[0].SearchDate = DateHelper.getMillisecondsFromEpoch();
+                    }
+                    else
+                    {
+                        History h = new History();
+                        h.Id = Guid.NewGuid().ToString();
+                        h.SearchDate = DateHelper.getMillisecondsFromEpoch();
+                        h.SearchString = tempFc.ToString();
+                        user.SearchHistory.Add(h);
+                    }
+                    user.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
             return View("SearchResults");
         }
+        
 
-        [HttpGet]
+    [HttpGet]
         public ActionResult CaseInfo()
         {
-            var CaseNumber = Request.QueryString["caseNo"];
-            CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
-
-            if (c != null)
+            try
             {
+                var CaseNumber = Request.QueryString["caseNo"];
+                CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
 
-                ViewBag.caseDetail = c;
-                return View("ViewCaseInfo");
+                if (c != null)
+                {
+
+                    ViewBag.caseDetail = c;
+                    return View("ViewCaseInfo");
+                } else
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Case number doesnot exist");
+                }
             }
-            Response.StatusCode = 500;
-            return SendErrorResponse("Internal Server Error", "Unknown Error Occured");
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
+            }
+            
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult CaseInfo(FormCollection fc)
         {
-            var CaseNumber = Request.QueryString["caseNo"];
-            CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
-            if (c != null)
+            try
             {
-                InputDataset i = new InputDataset(fc);
-                i.ConvertToDatabaseModel(ref c);
-                user.SaveChanges();
-            }
+                var CaseNumber = Request.QueryString["caseNo"];
+                CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
+                if (c != null)
+                {
+                    InputDataset i = new InputDataset(fc);
+                    i.ConvertToDatabaseModel(ref c);
+                    user.SaveChanges();
+                } else
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Case number doesnot exist.");
+                }
 
-            return SendAjaxResponse("ok", new
-            {
-                message = "Case Edited Successfully."
-            });
+                return SendAjaxResponse("ok", new
+                {
+                    message = "Case Edited Successfully."
+                });
+            }
+            catch(Exception e)
+            { 
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
+            }
         }
 
         public ActionResult Download()
         {
-            var CaseNumber = Request.QueryString["caseNo"];
-            var fileType = Request.QueryString["format"];
-            var caseNoList = CaseNumber.Split(',');
-            var caseList = user.CasePapers.Where(e => caseNoList.Contains(e.CaseNo)).ToList();
-            string[] columns = {   "CaseNo", "Plaintiff", "Defendant","Country", 
-                                   "DateOfFiling", "CourtOfLaw","Sequel","JudgeName", 
+            try
+            {
+                var CaseNumber = Request.QueryString["caseNo"];
+                var fileType = Request.QueryString["format"];
+                var caseNoList = CaseNumber.Split(',');
+                var caseList = user.CasePapers.Where(e => caseNoList.Contains(e.CaseNo)).ToList();
+                string[] columns = {   "CaseNo", "Plaintiff", "Defendant","Country",
+                                   "DateOfFiling", "CourtOfLaw","Sequel","JudgeName",
                                    "TypeOfSuit","RelatedTo", "UnderSection","PatentsAtIssue",
                                    "CaseSummary", "CourtInterpretation", "DateOfJudgement", "CaseDecision",
                                    "FurtherAppeals", "Status", "CaseInDetail"};
-            string fileName = null;
-            string absoluteFilePath = null;
-            byte[] fileData = null;
-            if (fileType == "xlsx")
-            {
-                Application app = new Application();
-                Workbook workbook = null;
-                Worksheet worksheet = null;
-                //app.Visible = true;
-                workbook = app.Workbooks.Add(1);
-                worksheet = (Worksheet)workbook.Sheets[1];
-                for (var j = 0; j < columns.Length; j++)
+                string fileName = null;
+                string absoluteFilePath = null;
+                byte[] fileData = null;
+                if (fileType == "xlsx")
                 {
-
-                    worksheet.Cells[1, (j + 1)] = InputSearchFields.getInputSearchField(columns[j], null, false, null).label;
-                }
-
-                for (var i = 0; i < caseList.Count; i++)
-                {
+                    Application app = new Application();
+                    Workbook workbook = null;
+                    Worksheet worksheet = null;
+                    //app.Visible = true;
+                    workbook = app.Workbooks.Add(1);
+                    worksheet = (Worksheet)workbook.Sheets[1];
                     for (var j = 0; j < columns.Length; j++)
                     {
-                        InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false, null);
-                        string val;
-                        if (j == 3)
-                        {
-                            val = CasePaper.Countries[Convert.ToInt32(f.value) - 1];
-                        }
-                        else if (j == 4)
-                        {
-                            val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
-                        }
-                        else if (j == 5)
-                        {
-                            val = CasePaper.Courts[Convert.ToInt32(f.value) - 1];
-                        }
-                        else if (j == 8)
-                        {
-                            val = CasePaper.Suits[Convert.ToInt32(f.value) - 1];
-                        }
-                        else if (j == 14)
-                        {
-                            val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
-                        }
-                        else if (j == 17)
-                        {
-                            val = CasePaper.Statuses[Convert.ToInt32(f.value) - 1];
-                        }
-                        else
-                        {
-                            val = f.value;
-                        }
 
-                        worksheet.Cells[(i + 2), (j + 1)] = val;
+                        worksheet.Cells[1, (j + 1)] = InputSearchFields.getInputSearchField(columns[j], null, false, null).label;
                     }
 
-                }
-                fileName = DateHelper.getMillisecondsFromEpoch() + ".xlsx";
-                absoluteFilePath = absoluteFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
-                workbook.SaveAs(absoluteFilePath);
-                workbook.Close();
-                fileData = System.IO.File.ReadAllBytes(absoluteFilePath);
-                System.IO.File.Delete(absoluteFilePath);
-            }
-            else if (fileType == "pdf")
-            {
-                System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-
-                Document document = new Document(PageSize.A4, 10, 10, 10, 10);
-
-                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
-                document.Open();
-                
-                Paragraph para;
-                for (var i = 0; i < caseList.Count; i++)
-                {
-                    for (var j = 0; j < columns.Length; j++)
+                    for (var i = 0; i < caseList.Count; i++)
                     {
-                        
-                        InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false, null);
-                        string val;
-                        if (j == 3)
+                        for (var j = 0; j < columns.Length; j++)
                         {
-                            val = CasePaper.Countries[Convert.ToInt32(f.value) - 1];
-                        }
-                        else if (j == 4)
-                        {
-                            val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
-                        }
-                        else if (j == 5)
-                        {
-                            val = CasePaper.Courts[Convert.ToInt32(f.value) - 1];
-                        }
-                        else if (j == 8)
-                        {
-                            val = CasePaper.Suits[Convert.ToInt32(f.value) - 1];
-                        }
-                        else if (j == 14)
-                        {
-                            val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
-                        }
-                        else if (j == 17)
-                        {
-                            val = CasePaper.Statuses[Convert.ToInt32(f.value) - 1];
-                        }
-                        else
-                        {
-                            val = f.value;
-                        }
-                        para = new Paragraph("") ;
-                        BaseFont bfTimes = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.CP1252, false);
+                            InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false, null);
+                            string val;
+                            if (j == 3)
+                            {
+                                val = CasePaper.Countries[Convert.ToInt32(f.value) - 1];
+                            }
+                            else if (j == 4)
+                            {
+                                val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
+                            }
+                            else if (j == 5)
+                            {
+                                val = CasePaper.Courts[Convert.ToInt32(f.value) - 1];
+                            }
+                            else if (j == 8)
+                            {
+                                val = CasePaper.Suits[Convert.ToInt32(f.value) - 1];
+                            }
+                            else if (j == 14)
+                            {
+                                val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
+                            }
+                            else if (j == 17)
+                            {
+                                val = CasePaper.Statuses[Convert.ToInt32(f.value) - 1];
+                            }
+                            else
+                            {
+                                val = f.value;
+                            }
 
-                        iTextSharp.text.Font times = new iTextSharp.text.Font(bfTimes, 12);
-                        Chunk chunk = new Chunk("" + f.label, times);
-                        para.Add(chunk);
-                        bfTimes = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1252, false);
-                        chunk = new Chunk(" : " + val, new iTextSharp.text.Font(bfTimes, 12));
-                        para.Add(chunk);
-                        document.Add(para);
+                            worksheet.Cells[(i + 2), (j + 1)] = val;
+                        }
+
                     }
-                    document.NewPage();
+                    fileName = DateHelper.getMillisecondsFromEpoch() + ".xlsx";
+                    absoluteFilePath = absoluteFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+                    workbook.SaveAs(absoluteFilePath);
+                    workbook.Close();
+                    fileData = System.IO.File.ReadAllBytes(absoluteFilePath);
+                    System.IO.File.Delete(absoluteFilePath);
                 }
-                
+                else if (fileType == "pdf")
+                {
+                    System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
 
-                document.Close();
-                fileData = memoryStream.ToArray();
-                fileName = DateHelper.getMillisecondsFromEpoch() + ".pdf";
-                memoryStream.Close();
+                    Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+
+                    PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                    document.Open();
+
+                    Paragraph para;
+                    for (var i = 0; i < caseList.Count; i++)
+                    {
+                        for (var j = 0; j < columns.Length; j++)
+                        {
+
+                            InputSearchField f = InputSearchFields.getInputSearchField(columns[j], caseList[i], false, null);
+                            string val;
+                            if (j == 3)
+                            {
+                                val = CasePaper.Countries[Convert.ToInt32(f.value) - 1];
+                            }
+                            else if (j == 4)
+                            {
+                                val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
+                            }
+                            else if (j == 5)
+                            {
+                                val = CasePaper.Courts[Convert.ToInt32(f.value) - 1];
+                            }
+                            else if (j == 8)
+                            {
+                                val = CasePaper.Suits[Convert.ToInt32(f.value) - 1];
+                            }
+                            else if (j == 14)
+                            {
+                                val = DateHelper.convertToDateTime(Convert.ToInt64(f.value)).ToLongDateString();
+                            }
+                            else if (j == 17)
+                            {
+                                val = CasePaper.Statuses[Convert.ToInt32(f.value) - 1];
+                            }
+                            else
+                            {
+                                val = f.value;
+                            }
+                            para = new Paragraph("");
+                            BaseFont bfTimes = BaseFont.CreateFont(BaseFont.COURIER_BOLD, BaseFont.CP1252, false);
+
+                            iTextSharp.text.Font times = new iTextSharp.text.Font(bfTimes, 12);
+                            Chunk chunk = new Chunk("" + f.label, times);
+                            para.Add(chunk);
+                            bfTimes = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1252, false);
+                            chunk = new Chunk(" : " + val, new iTextSharp.text.Font(bfTimes, 12));
+                            para.Add(chunk);
+                            document.Add(para);
+                        }
+                        document.NewPage();
+                    }
+
+
+                    document.Close();
+                    fileData = memoryStream.ToArray();
+                    fileName = DateHelper.getMillisecondsFromEpoch() + ".pdf";
+                    memoryStream.Close();
+                }
+
+                if (fileData != null && fileName != null)
+                {
+                    return File(fileData, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+                }
+                else
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Error generating files.");
+                }
             }
-            if (fileData != null && fileName != null)
+            catch(Exception e)
             {
-                return File(fileData, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
             }
-            else
-            {
-                return View();
-            }
-        }
+
+
+    }
 
         public ActionResult SearchHistory()
         {
-            var history = user.SearchHistory.OrderByDescending(x => x.SearchDate).ToList();
-            ViewBag.history = history;
+            try
+            {
+                var history = user.SearchHistory.OrderByDescending(x => x.SearchDate).ToList();
+                ViewBag.history = history;
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
+            }
             return View("SearchHistory");
         }
     }

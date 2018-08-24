@@ -290,7 +290,6 @@
     <Content Include="Views\Error-500.aspx" />
     <Content Include="Views\Home\Requesters.aspx" />
     <Content Include="Views\Home\Dashboard.aspx" />
-    <Content Include="Views\Home\Index.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
