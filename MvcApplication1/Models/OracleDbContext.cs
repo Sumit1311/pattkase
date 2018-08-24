@@ -301,24 +301,25 @@ namespace MvcApplication1.Models
 
         [Key]
         public string Id { get; set; }
-
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [Required(ErrorMessage = "Full Name is required.")]
+        [StringLength(50, ErrorMessage = "Fullname Length Exceeded. Max length 50")]
         public string FullName { get; set; }
-
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [Required(ErrorMessage = "Address is required.")]
+        [StringLength(100, ErrorMessage = "Address Length Exceeded. Max Length 100")]
         public string Address { get; set; }
-
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [Required(ErrorMessage = "Name Of Organization is required.")]
+        [StringLength(50, ErrorMessage = "Name of Organization Length Exceeded. Max Length 50")]
         public string NameOfOrganization { get; set; }
-
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [Required(ErrorMessage = "EmailId is required.")]
+        [StringLength(100, ErrorMessage = "Email Id Length Exceeded. Max Length 100")]
+        [EmailAddress]
         public string EmailId { get; set; }
-
+        [Required(ErrorMessage = "Profession is required.")]
         public int Profession { get; set; }
-
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [Required(ErrorMessage = "Purpose is required.")]
+        [StringLength(200, ErrorMessage = "Purpose Length Exceeded. Max Length 200")]
         public string Purpose { get; set; }
-
+        [Required(ErrorMessage = "Status is required.")]
         public int Status { get; set; }
 
         //public Login Login { get; set; }

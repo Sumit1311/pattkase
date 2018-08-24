@@ -19,6 +19,7 @@
 			</div>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
+      <%= Html.LabelFor<Requester>(r => r.EmailId) %>
     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="email">
     <small id="emailHelp" class="form-text text-muted">Max. 50 characters</small>
   </div>

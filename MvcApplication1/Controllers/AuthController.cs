@@ -44,7 +44,11 @@ namespace MvcApplication1.Controllers
             {
                 //Login login = ctx.Logins.Where(m => (m.UserName == email)).First<Login>();
                 Login login = userManager.FindByName(userName);
-
+                if(login == null)
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "User Doesnot Exist");
+                }
                 bool checkPwd = userManager.CheckPassword(login, pwd);
                 if (checkPwd)
                 {
@@ -68,7 +72,7 @@ namespace MvcApplication1.Controllers
                         );
                     }
                     authManager.SignIn(identity);
-                    if (ReturnUrl != null && ReturnUrl != String.Empty){
+                    if (!string.IsNullOrEmpty(ReturnUrl)){
                         return SendRedirectResponse(ReturnUrl);
                     }
                     return SendRedirectResponse(Url.Action("Dashboard", "Home"));
@@ -76,14 +80,14 @@ namespace MvcApplication1.Controllers
                 else
                 {
                     Response.StatusCode = 400;
-                    return SendErrorResponse("Bad Request", "User does not exist");
+                    return SendErrorResponse("Bad Request", "Userid or Password didn't match");
                 }
 
             }
             catch (InvalidOperationException e)
             {
-                System.Diagnostics.Debug.WriteLine("User Does Not Exist");
-                System.Diagnostics.Debug.WriteLine(e);
+                //System.Diagnostics.Debug.WriteLine("User Does Not Exist");
+                //System.Diagnostics.Debug.WriteLine(e);
                 Response.StatusCode = 500;
                 return SendErrorResponse("Internal Server Error", e.Message);
             }
@@ -122,6 +126,8 @@ namespace MvcApplication1.Controllers
         public ActionResult Register(System.Web.Mvc.FormCollection fc)
         {
             Requester req = new Requester();
+
+            
 
             req.Id = Guid.NewGuid().ToString();
             req.Address = fc["address"].ToString();
