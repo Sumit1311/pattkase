@@ -33,7 +33,15 @@ namespace MvcApplication1.Controllers
             ClaimsIdentity identity = User.Identity as ClaimsIdentity;
             //ViewBag.Email = claimsIdentity.FindFirst(ClaimTypes.Email).Value;
             //ViewBag.Role = identity.HasClaim(ClaimTypes.Role,"Admin");
-            ViewBag.searchFields = user.SearchFields.Where(f => (f.Show == true)).ToList();
+            try
+            {
+                ViewBag.searchFields = user.SearchFields.Where(f => (f.Show == true)).ToList();
+            }
+            catch(Exception e){
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
+            }
+            
             return View("Dashboard");
         }
 
@@ -41,7 +49,15 @@ namespace MvcApplication1.Controllers
         [HttpGet]
         public ActionResult Requesters()
         {
-            var requesters = user.Requesters.ToList();
+            var requesters = new List<Requester>();
+            try
+            {
+                requesters = user.Requesters.ToList();
+            }catch(Exception e){
+                Response.StatusCode = 500;
+                return SendErrorResponse("Internal Server Error", e.Message);
+            }
+            
             ViewBag.requesters = requesters;
             return View("Requesters");        
         }

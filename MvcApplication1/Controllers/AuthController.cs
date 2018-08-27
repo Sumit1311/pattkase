@@ -13,7 +13,12 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net.Mail;
 using MvcApplication1.Models;
-
+using MvcApplication1.Library;
+using Microsoft.Owin.Security.DataProtection;
+using Microsoft.AspNet.Identity.Owin;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace MvcApplication1.Controllers
 {
@@ -25,6 +30,8 @@ namespace MvcApplication1.Controllers
         {
             //ctx.InitializeModel();
             userManager = new UserManager<Login>(new UserStore<Login>(user));
+            var provider = new DpapiDataProtectionProvider("PattKase");
+            userManager.UserTokenProvider = new DataProtectorTokenProvider<Login>(provider.Create("Pattkase"));
         }
 
         [AllowAnonymous]
@@ -131,13 +138,30 @@ namespace MvcApplication1.Controllers
             
 
             req.Id = Guid.NewGuid().ToString();
-            req.Address = fc["address"].ToString();
-            req.EmailId = fc["email"].ToString();
-            req.FullName = fc["fullname"].ToString();
-            req.NameOfOrganization = fc["organization"].ToString();
+            req.Address = fc["address"];
+            req.EmailId = fc["email"];
+            req.FullName = fc["fullname"];
+            req.NameOfOrganization = fc["organization"];
             req.Profession = Convert.ToInt32(fc["profession"]);
-            req.Purpose = fc["purpose"].ToString();
+            req.Purpose = fc["purpose"];
             req.Status = 0;
+
+            if (!TryValidateModel(req))
+            {
+                if (!ModelState.IsValid)
+                {
+                    string errors = "";
+                    foreach(var val in ModelState.Values)
+                    {
+                        foreach(var err in val.Errors)
+                        {
+                            errors += "<br> - "+ err.ErrorMessage;
+                        }
+                    }
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Field Validation Failed : "+errors);
+                }
+            }
 
 
             try
@@ -186,15 +210,25 @@ namespace MvcApplication1.Controllers
         public ActionResult ViewRequester()
         {
             var RequesterId = Request.QueryString["id"];
+            if (string.IsNullOrEmpty(RequesterId))
+            {
+                Response.StatusCode = 400;
+                return SendErrorResponse("Bad Request", "id parameter required");
+            }
             try 
             { 
                 Login login = user.Users.FirstOrDefault(r => r.RequesterRefId == RequesterId);
                 Requester req = user.Requesters.FirstOrDefault(r => r.Id == RequesterId);
+                if (req == null)
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "No request found");
+                }
                 ViewBag.requester = req;
                 if (login == null)
                 {
                     ViewBag.userName = req.EmailId;
-                    ViewBag.password = "Default123";
+                    ViewBag.password = PasswordHelper.generatePassword();
                 }
                 else
                 {
@@ -214,17 +248,34 @@ namespace MvcApplication1.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public ActionResult Approve(System.Web.Mvc.FormCollection fc)
+        //public async System.Threading.Tasks.Task<ActionResult> Approve(System.Web.Mvc.FormCollection fc)
+            public ActionResult Approve(System.Web.Mvc.FormCollection fc)
         {
             var requesterId = fc["reqId"];
             var userName = fc["userName"];
             var password = fc["pwd"];
+            var resend = Request.QueryString["resend"];
+            if (string.IsNullOrEmpty(requesterId) || string.IsNullOrEmpty(userName))
+            {
+                Response.StatusCode = 400;
+                return SendErrorResponse("Bad Request", "Required field validation failed. Please provide the required fields and try again.");
+            }
             var userLogin = new Login();
             try 
             {
             Requester req = user.Requesters.FirstOrDefault(r => r.Id == requesterId);
+            if (req == null)
+            {
+                Response.StatusCode = 400;
+                return SendErrorResponse("Bad Request", "Request Id not found");
+            }
             if (req.Status == 0)
             {
+                if (string.IsNullOrEmpty(password))
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Required field validation failed. Please provide the required fields and try again.");
+                }
                 userLogin.RequesterRefId = requesterId;
                 userLogin.UserName = userName;
                 var chkUser = userManager.Create(userLogin, password);
@@ -233,8 +284,7 @@ namespace MvcApplication1.Controllers
                 {
                     var result1 = userManager.AddToRoles(userLogin.Id, "Member");
                     user.SaveChanges();
-                }
-                /*SmtpClient smtpClient = new SmtpClient("smtp.mailgun.org", 25);
+                    /*SmtpClient smtpClient = new SmtpClient("smtp.mailgun.org", 25);
 
                 smtpClient.Credentials = new System.Net.NetworkCredential("postmaster@sandboxc22cd49475a84fb084112d1ae7fc171e.mailgun.org", "7d79211555e00c458bd6ca5bea33f527");
                 smtpClient.UseDefaultCredentials = true;
@@ -248,12 +298,54 @@ namespace MvcApplication1.Controllers
                 //mail.CC.Add(new MailAddress("sumittoshniwal92@gmail.com"));
 
                 smtpClient.Send(mail);*/
+                }
+                else
+                {
+                    Response.StatusCode = 500;
+                    return SendErrorResponse("Internal Server Error", "User creation failed. Please try again later");
+                }
+                
 
                 //Response.Redirect("/Auth/ViewRequester?id=" + requesterId);
             }
             else
             {
+                if (resend == "true")
+                {
+                    userLogin = userManager.FindByName(userName);
+                    if (userLogin == null)
+                    {
+                        Response.StatusCode = 400;
+                        return SendErrorResponse("Bad Request", "User not found");
+                    }
+                    string token = userManager.GeneratePasswordResetToken(userLogin.Id);
+                    string pwd = PasswordHelper.generatePassword();
+                    userManager.ResetPassword(userLogin.Id, token, pwd);
+                    var Res = EmailHelpser.sendEmail(userLogin.UserName, pwd).Result;
+                    var v = Res.Content.ReadAsStringAsync();
+                    var r = v.Result;
+                        /*SmtpClient smtpClient = new SmtpClient("smtp.mailgun.org", 25);
+
+                        smtpClient.Credentials = new System.Net.NetworkCredential("postmaster@sandbox4af0182d1b6646ca92b44845751c8a17.mailgun.org", "5a414512ea6f51a56fbe009bd53fee77-a4502f89-4358403e");
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                smtpClient.EnableSsl = false;
+                MailMessage mail = new MailMessage();
+                mail.Subject = "Pattkase User Credentials";
+                mail.Body = "User Name : " + userLogin.UserName + "  Password : " + pwd;
+
+                //Setting From , To and CC
+                mail.From = new MailAddress("postmaster@sandbox4af0182d1b6646ca92b44845751c8a17.mailgun.org", "Test");
+                mail.To.Add(new MailAddress("sumittoshniwal92@gmail.com"));
+                //mail.CC.Add(new MailAddress("sumittoshniwal92@gmail.com"));
+
+                smtpClient.Send(mail);*/
+                }
+                else { 
                 //TODO : Handle this case when the user is already active
+                Response.StatusCode = 400;
+                return SendErrorResponse("Bad Request", "User already approved.");
+                }
             }
             return SendRedirectResponse(Url.Action("Requesters","Home"));
                  }

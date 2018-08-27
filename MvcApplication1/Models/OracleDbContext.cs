@@ -298,7 +298,7 @@ namespace MvcApplication1.Models
             "Inactive"
 
         };
-
+        const int numOfProfessions = 2, numOfStatuses = 1;
         [Key]
         public string Id { get; set; }
         [Required(ErrorMessage = "Full Name is required.")]
@@ -310,11 +310,12 @@ namespace MvcApplication1.Models
         [Required(ErrorMessage = "Name Of Organization is required.")]
         [StringLength(50, ErrorMessage = "Name of Organization Length Exceeded. Max Length 50")]
         public string NameOfOrganization { get; set; }
-        [Required(ErrorMessage = "EmailId is required.")]
+        [Required(ErrorMessage = "Email Id is required.")]
         [StringLength(100, ErrorMessage = "Email Id Length Exceeded. Max Length 100")]
         [EmailAddress]
         public string EmailId { get; set; }
         [Required(ErrorMessage = "Profession is required.")]
+        [Range(0, numOfProfessions)]
         public int Profession { get; set; }
         [Required(ErrorMessage = "Purpose is required.")]
         [StringLength(200, ErrorMessage = "Purpose Length Exceeded. Max Length 200")]
@@ -363,39 +364,45 @@ namespace MvcApplication1.Models
                "Active",
                "Inactive"
         };
+        const int numOfCountries = 3, numOfCourts = 3, numOfSuits = 4, numOfStatuses = 2;
         [Key]
         public string Id { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(100, ErrorMessage = "Case Number Length Exceeded Limit. Max Length is 100")]
         public string CaseNo { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(100,  ErrorMessage = "Plaintiff Length Exceeded Limit. Max Length is 100")]
         public string Plaintiff { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(100,  ErrorMessage = "Defendant Length Exceeded Limit. Max Length is 100")]
         public string Defendant { get; set; }
+        [Range(1, numOfCountries, ErrorMessage = "The country range is invalid.")]
         public int Country { get; set; }
         public Int64 DateOfFiling { get; set; }
+        [Range(1, numOfCourts, ErrorMessage = "The court of law range is invalid.")]
         public int CourtOfLaw { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(100, ErrorMessage = "Sequel length exceeded. Max length is 100")]
         public string Sequel { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(100, ErrorMessage = "Judge Name length exceeded. Max length is 100")]
         public string JudgeName { get; set; }
+        [Range(1, numOfSuits, ErrorMessage = "The type of suit range is invalid.")]
         public int TypeOfSuit { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(500, ErrorMessage = "Related to length Exceeded. Max length is 500")]
         public string RelatedTo { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(100, ErrorMessage = "Under section length exceeded. Max length is 100")]
         public string UnderSection { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(500, ErrorMessage = "Patents at issue length exceeded. Max length is 500")]
         public string PatentsAtIssue { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(2000, ErrorMessage = "Case Summary length exceeded. Max length is 2000")]
         public string CaseSummary { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(1000, ErrorMessage = "Court Interpretation length exceeded. Max length is 1000")]
         public string CourtInterpretation { get; set; }
         public Int64 DateOfJudgement { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(2000, ErrorMessage = "Case Decision length exceeded. Max length is 2000")]
         public string CaseDecision { get; set; }
-        [StringLength(255, ErrorMessage = "My Error Message")]
+        [StringLength(500, ErrorMessage = "Further Appeals length exceeded. Max length is 500")]
         public string FurtherAppeals { get; set; }
+        [Range(1, numOfStatuses, ErrorMessage = "The status range is invalid.")]
         public int Status { get; set; }
-        [StringLength(10000, ErrorMessage = "My Error Message")]
+        [Column(TypeName = "varchar2")]
+        [MaxLength(4000, ErrorMessage = "Case In Detail length exceeded. Max length is 4000")]
         public string CaseInDetail { get; set; }
         [StringLength(255, ErrorMessage = "My Error Message")]
         public string FlowChart { get; set; }

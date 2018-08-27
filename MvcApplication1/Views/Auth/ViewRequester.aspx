@@ -51,7 +51,7 @@
             <div class="card-header">Login and Password</div>
             <div class="card-body">
                 
-<form method="POST" action="/Auth/Approve">
+<form method="POST" action="/Auth/Approve<%= this.ViewBag.isApproved ? "?resend=true" : "" %>">
     <% if (!this.ViewBag.isApproved)
         {%>
     <div class="form-row">
@@ -93,6 +93,8 @@
   <% if (!this.ViewBag.isApproved)
       {%>
   <button type="submit" class="btn btn-primary<%= this.ViewBag.isApproved ? "disabled" : "" %> ">Approve</button>
+    <%} else {%>
+    <button type="submit" class="btn btn-primary">Reset Password</button>
     <%} %>
 </form>
                 </div>

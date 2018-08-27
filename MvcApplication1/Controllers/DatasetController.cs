@@ -46,10 +46,11 @@ namespace MvcApplication1.Controllers
                 {
                     if (list.Contains(key))
                     {
-                        var f = user.SearchFields.FirstOrDefault(e => (e.FieldName == key && e.Show == false));
+                        var f = user.SearchFields.FirstOrDefault(e => (e.FieldName == key));
                         if (f != null)
                         {
-                            f.Show = true;
+                            if(f.Show == false)
+                                f.Show = true;
                         }
                         else
                         {
@@ -60,10 +61,15 @@ namespace MvcApplication1.Controllers
                     }
                     else
                     {
-                        var f = user.SearchFields.FirstOrDefault(e => (e.FieldName == key && e.Show == true));
+                        var f = user.SearchFields.FirstOrDefault(e => (e.FieldName == key));
                         if (f != null)
                         {
-                            f.Show = false;
+
+                            if (f.Show == true)
+                            {
+                                f.Show = false;
+                            }
+                            
                         }
                         else
                         {
@@ -118,7 +124,28 @@ namespace MvcApplication1.Controllers
                         for (var j = 0; j < data.Count; j++)
                         {
                             //user.CasePapers.Add(data[0]);
-                            user.CasePapers.Add(data[j].ConvertToDatabaseModel());
+                            CasePaper c = data[j].ConvertToDatabaseModel();
+                            if (!TryValidateModel(c))
+                            {
+                                if (!ModelState.IsValid)
+                                {
+                                    string errors = "";
+                                    foreach (var val in ModelState.Values)
+                                    {
+                                        foreach (var err in val.Errors)
+                                        {
+                                            errors += "<br> - " + err.ErrorMessage;
+                                        }
+                                    }
+                                    Response.StatusCode = 400;
+                                    return SendErrorResponse("Bad Request", "Field Validation Failed for Case Number "+ c.CaseNo +" : " + errors);
+                                }
+                            }
+                            else
+                            {
+                                ModelState.Clear();
+                            }
+                            user.CasePapers.Add(c);
                         }
                     }
                     if (dataset[i].type == "update" && data != null)
@@ -133,6 +160,11 @@ namespace MvcApplication1.Controllers
                                 {
                                     data[j].ConvertToDatabaseModel(ref updatedCase);
                                 }
+                                else
+                                {
+                                    Response.StatusCode = 400;
+                                    return SendErrorResponse("Bad Request", "Field Validation Failed for Case Number "+updatedCase.CaseNo);
+                                }
                             }
                         }
                     }
@@ -143,7 +175,13 @@ namespace MvcApplication1.Controllers
                             if (data[j].id != null)
                             {
                                 var id = data[j].id;
-                                user.CasePapers.RemoveRange(user.CasePapers.Where(e => e.Id == id));
+                                var c = user.CasePapers.Where(e => e.Id == id);
+                                if (c.ToList().Count == 0)
+                                {
+                                    Response.StatusCode = 400;
+                                    return SendErrorResponse("Bad Request", "Field Validation Failed for Id : "+id);
+                                }
+                                user.CasePapers.RemoveRange(c);
                             }
                         }
                     }
@@ -165,12 +203,22 @@ namespace MvcApplication1.Controllers
                 var fc = Request.QueryString;
                 //caseSearch compulsory
                 string searchStyle = fc["searchStyle"];
+                if (string.IsNullOrEmpty(searchStyle))
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Search Style field invalid");
+                }
+                if (fc["caseSearch"] == null)
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "caseSearch field is required");
+                }
                 string saveSearch = fc["saveSearch"];
                 List<SearchField> fields = new List<SearchField>();
-                fields.Add(new SearchField
+                /*fields.Add(new SearchField
                 {
                     FieldName = "Case In Detail"
-                });
+                });*/
                 if (searchStyle == "caseNo")
                 {
                     fields.Add(new SearchField
@@ -205,7 +253,7 @@ namespace MvcApplication1.Controllers
                 }
                 SqlQuery q = InputSearchFields.getSqlQuery(inputList, fc);
                 var cases = user.CasePapers.SqlQuery(q.queryString, q.parameters.ToArray()).ToList();
-                List<List<InputSearchField>> casesList = new List<List<InputSearchField>>();
+                /*List<List<InputSearchField>> casesList = new List<List<InputSearchField>>();
                 for (i = 0; i < cases.Count; i++)
                 {
                     List<InputSearchField> t = new List<InputSearchField>();
@@ -215,7 +263,7 @@ namespace MvcApplication1.Controllers
                         t.Add(f);
                     }
                     casesList.Add(t);
-                }
+                }*/
                 ViewBag.caseResults = cases;
                 if (saveSearch != null && saveSearch == "1")
                 {
@@ -253,6 +301,11 @@ namespace MvcApplication1.Controllers
             try
             {
                 var CaseNumber = Request.QueryString["caseNo"];
+                if (string.IsNullOrEmpty(CaseNumber))
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "caseNo required");
+                }
                 CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
 
                 if (c != null)
@@ -281,6 +334,11 @@ namespace MvcApplication1.Controllers
             try
             {
                 var CaseNumber = Request.QueryString["caseNo"];
+                if (string.IsNullOrEmpty(CaseNumber))
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "caseNo required");
+                }
                 CasePaper c = user.CasePapers.FirstOrDefault(e => e.CaseNo == CaseNumber);
                 if (c != null)
                 {
@@ -311,7 +369,23 @@ namespace MvcApplication1.Controllers
             {
                 var CaseNumber = Request.QueryString["caseNo"];
                 var fileType = Request.QueryString["format"];
+                if (string.IsNullOrEmpty(CaseNumber) || string.IsNullOrEmpty(fileType))
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Required parameters missing");
+                }
                 var caseNoList = CaseNumber.Split(',');
+                if (caseNoList.Length == 0)
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Bad parameters");
+                }
+
+                if (caseNoList.Length > 10)
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Please choose less than 10 files for downloading. Current download limit is restricted to 10.");
+                }
                 var caseList = user.CasePapers.Where(e => caseNoList.Contains(e.CaseNo)).ToList();
                 string[] columns = {   "CaseNo", "Plaintiff", "Defendant","Country",
                                    "DateOfFiling", "CourtOfLaw","Sequel","JudgeName",
@@ -438,13 +512,18 @@ namespace MvcApplication1.Controllers
                             document.Add(para);
                         }
                         document.NewPage();
-                    }
+                    } 
 
 
                     document.Close();
                     fileData = memoryStream.ToArray();
                     fileName = DateHelper.getMillisecondsFromEpoch() + ".pdf";
                     memoryStream.Close();
+                }
+                else
+                {
+                    Response.StatusCode = 400;
+                    return SendErrorResponse("Bad Request", "Field validation failed. Please provide proper fields.");
                 }
 
                 if (fileData != null && fileName != null)
