@@ -25,9 +25,16 @@
         <td><span class="badge badge-<%= i.Status == 0 ? "danger" : "success" %>"><%= i.Status == 0 ? "Inactive" : "Active" %></span></td>
       <td><a href="/Auth/ViewRequester?id=<%= i.Id %>" class="btn btn-primary" role="button">View</a></td>
     </tr>
-  </tbody>
-</table>  
+  
+
+
+
+
+
+
     <%} %>
+      </tbody>
+</table>  
 
 </asp:Content>
 

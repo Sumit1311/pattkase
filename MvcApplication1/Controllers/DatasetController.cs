@@ -286,6 +286,11 @@ namespace MvcApplication1.Controllers
                     user.SaveChanges();
                 }
             }
+            catch(MvcApplication1.Library.ValidationException e)
+            {
+                Response.StatusCode = 400;
+                return SendErrorResponse("Bad Request", e.Message);
+            }
             catch (Exception e)
             {
                 Response.StatusCode = 500;

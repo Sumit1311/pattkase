@@ -861,6 +861,10 @@ namespace MvcApplication1.Models
                 {
                     if (f.name == "caseNo")
                     {
+                        if(f.value.Length >= 50)
+                        {
+                            throw new MvcApplication1.Library.ValidationException("Field validation failed. Case number max length is 50");
+                        }
                         var columnName = "CaseNo";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator("1") + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%'";
@@ -868,6 +872,11 @@ namespace MvcApplication1.Models
                     }
                     else if (f.name == "plaintiff")
                     {
+                        if (f.value.Length >= 25)
+                        {
+                            throw new MvcApplication1.Library.ValidationException("Field validation failed. Plaintiff max length is 25");
+                        }
+                        
                         var columnName = "Plaintiff";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%'";
@@ -875,6 +884,10 @@ namespace MvcApplication1.Models
                     }
                     else if (f.name == "defendant")
                     {
+                        if (f.value.Length > 25)
+                        {
+                            throw new MvcApplication1.Library.ValidationException("Field validation failed. Defedant max length is 25");
+                        }
                         var columnName = "Defendant";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \"" +columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + "|| '%' ";
@@ -910,6 +923,10 @@ namespace MvcApplication1.Models
                     }
                     else if (f.name == "judgeName")
                     {
+                        if (f.value.Length > 50)
+                        {
+                            throw new MvcApplication1.Library.ValidationException("Field validation failed. Name Of Judge max length is 50");
+                        }
                         var columnName = "JudgeName";
                         //selectClause += (parameters.Count == 0 ? "" : "," )+" \""+columnName+"\"";
                         whereClause += (parameters.Count == 0 ? "" : " " + InputSearchFields.getOperator(fc["operator_" + f.name]) + " ") + " UPPER(\"" + columnName + "\")  LIKE '%' || :" + parameters.Count + " || '%'";

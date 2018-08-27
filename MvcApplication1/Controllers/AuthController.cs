@@ -248,8 +248,8 @@ namespace MvcApplication1.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        //public async System.Threading.Tasks.Task<ActionResult> Approve(System.Web.Mvc.FormCollection fc)
-            public ActionResult Approve(System.Web.Mvc.FormCollection fc)
+        public async System.Threading.Tasks.Task<ActionResult> Approve(System.Web.Mvc.FormCollection fc)
+        //    public ActionResult Approve(System.Web.Mvc.FormCollection fc)
         {
             var requesterId = fc["reqId"];
             var userName = fc["userName"];
@@ -276,13 +276,16 @@ namespace MvcApplication1.Controllers
                     Response.StatusCode = 400;
                     return SendErrorResponse("Bad Request", "Required field validation failed. Please provide the required fields and try again.");
                 }
-                userLogin.RequesterRefId = requesterId;
+                    await EmailHelpser.sendRegistrationEmail(userName, password);
+
+                    userLogin.RequesterRefId = requesterId;
                 userLogin.UserName = userName;
                 var chkUser = userManager.Create(userLogin, password);
                 req.Status = 1;
                 if (chkUser.Succeeded)
                 {
-                    var result1 = userManager.AddToRoles(userLogin.Id, "Member");
+                        
+                        var result1 = userManager.AddToRoles(userLogin.Id, "Member");
                     user.SaveChanges();
                     /*SmtpClient smtpClient = new SmtpClient("smtp.mailgun.org", 25);
 
@@ -318,12 +321,11 @@ namespace MvcApplication1.Controllers
                         Response.StatusCode = 400;
                         return SendErrorResponse("Bad Request", "User not found");
                     }
-                    string token = userManager.GeneratePasswordResetToken(userLogin.Id);
-                    string pwd = PasswordHelper.generatePassword();
-                    userManager.ResetPassword(userLogin.Id, token, pwd);
-                    var Res = EmailHelpser.sendEmail(userLogin.UserName, pwd).Result;
-                    var v = Res.Content.ReadAsStringAsync();
-                    var r = v.Result;
+                        string pwd = PasswordHelper.generatePassword();
+                        string token = userManager.GeneratePasswordResetToken(userLogin.Id);
+                        await EmailHelpser.sendResetPasswordEmail(userName, pwd);
+                        userManager.ResetPassword(userLogin.Id, token, pwd);
+                    
                         /*SmtpClient smtpClient = new SmtpClient("smtp.mailgun.org", 25);
 
                         smtpClient.Credentials = new System.Net.NetworkCredential("postmaster@sandbox4af0182d1b6646ca92b44845751c8a17.mailgun.org", "5a414512ea6f51a56fbe009bd53fee77-a4502f89-4358403e");
@@ -340,7 +342,7 @@ namespace MvcApplication1.Controllers
                 //mail.CC.Add(new MailAddress("sumittoshniwal92@gmail.com"));
 
                 smtpClient.Send(mail);*/
-                }
+                    }
                 else { 
                 //TODO : Handle this case when the user is already active
                 Response.StatusCode = 400;
